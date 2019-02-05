@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="springboot,mybatis,">
 
 
 
@@ -79,18 +79,19 @@
 
 
 
-<meta name="description" content="SpringBoot整合MyBatis开发入门本项目使用SpringBoot+MyBatis开发java web服务，前端使用element-ui和vue。 使用SpringBoot搭建web服务，首先要搭建起web应用开发骨架，这与SpringMVC用异同之处，下面将详细介绍。 准备工作1. 导包12345678910111213141516171819202122232425262728293">
+<meta name="description" content="本项目使用SpringBoot+MyBatis开发java web服务，前端使用element-ui和vue。 使用SpringBoot搭建web服务，首先要搭建起web应用开发骨架，这与SpringMVC用异同之处，下面将详细介绍。 准备工作1. 导包12345678910111213141516171819202122232425262728293031323334&amp;lt;!-- 支持jdbc">
+<meta name="keywords" content="springboot,mybatis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="KenetGit&#39;s blog">
+<meta property="og:title" content="SpringBoot整合MyBatis开发入门">
 <meta property="og:url" content="http://yoursite.com/2019/02/05/SpringBoot-starter/index.html">
 <meta property="og:site_name" content="KenetGit&#39;s blog">
-<meta property="og:description" content="SpringBoot整合MyBatis开发入门本项目使用SpringBoot+MyBatis开发java web服务，前端使用element-ui和vue。 使用SpringBoot搭建web服务，首先要搭建起web应用开发骨架，这与SpringMVC用异同之处，下面将详细介绍。 准备工作1. 导包12345678910111213141516171819202122232425262728293">
+<meta property="og:description" content="本项目使用SpringBoot+MyBatis开发java web服务，前端使用element-ui和vue。 使用SpringBoot搭建web服务，首先要搭建起web应用开发骨架，这与SpringMVC用异同之处，下面将详细介绍。 准备工作1. 导包12345678910111213141516171819202122232425262728293031323334&amp;lt;!-- 支持jdbc">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="https://img-blog.csdn.net/20170720210424062?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSW5pdGU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
-<meta property="og:updated_time" content="2019-02-05T09:30:30.665Z">
+<meta property="og:updated_time" content="2019-02-05T09:32:41.113Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="KenetGit&#39;s blog">
-<meta name="twitter:description" content="SpringBoot整合MyBatis开发入门本项目使用SpringBoot+MyBatis开发java web服务，前端使用element-ui和vue。 使用SpringBoot搭建web服务，首先要搭建起web应用开发骨架，这与SpringMVC用异同之处，下面将详细介绍。 准备工作1. 导包12345678910111213141516171819202122232425262728293">
+<meta name="twitter:title" content="SpringBoot整合MyBatis开发入门">
+<meta name="twitter:description" content="本项目使用SpringBoot+MyBatis开发java web服务，前端使用element-ui和vue。 使用SpringBoot搭建web服务，首先要搭建起web应用开发骨架，这与SpringMVC用异同之处，下面将详细介绍。 准备工作1. 导包12345678910111213141516171819202122232425262728293031323334&amp;lt;!-- 支持jdbc">
 <meta name="twitter:image" content="https://img-blog.csdn.net/20170720210424062?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvSW5pdGU=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center">
 
 
@@ -127,7 +128,7 @@
 
 
 
-  <title> | KenetGit's blog</title>
+  <title>SpringBoot整合MyBatis开发入门 | KenetGit's blog</title>
   
 
 
@@ -272,7 +273,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">SpringBoot整合MyBatis开发入门</h1>
         
 
         <div class="post-meta">
@@ -322,7 +323,7 @@
       
 
       
-        <h2 id="SpringBoot整合MyBatis开发入门"><a href="#SpringBoot整合MyBatis开发入门" class="headerlink" title="SpringBoot整合MyBatis开发入门"></a>SpringBoot整合MyBatis开发入门</h2><p>本项目使用SpringBoot+MyBatis开发java web服务，前端使用element-ui和vue。</p>
+        <p>本项目使用SpringBoot+MyBatis开发java web服务，前端使用element-ui和vue。</p>
 <p>使用SpringBoot搭建web服务，首先要搭建起web应用开发骨架，这与SpringMVC用异同之处，下面将详细介绍。</p>
 <h3 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h3><h4 id="1-导包"><a href="#1-导包" class="headerlink" title="1. 导包"></a>1. 导包</h4><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- 支持jdbc--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-jdbc<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- 提供对thymeleaf视图模板的支持--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-thymeleaf<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- springboot的web开发包，相当于springmvc--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-web<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- springboot的核心开发包--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.mybatis.spring.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mybatis-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>2.0.0<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- mysql数据库连接驱动--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>mysql<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>mysql-connector-java<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">scope</span>&gt;</span>runtime<span class="tag">&lt;/<span class="name">scope</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- alibaba的druid数据库连接池 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">groupId</span>&gt;</span>com.alibaba<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>druid-spring-boot-starter<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">version</span>&gt;</span>1.1.9<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
 <p>以上是应用开发的主要依赖，其中注释了各个包大致的作用，除了这些，项目中还是用到了以下包依赖。</p>
@@ -408,6 +409,14 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/springboot/" rel="tag"># springboot</a>
+          
+            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
+          
+        </div>
       
 
       
@@ -518,7 +527,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -567,7 +576,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SpringBoot整合MyBatis开发入门"><span class="nav-number">1.</span> <span class="nav-text">SpringBoot整合MyBatis开发入门</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-导包"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. 导包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-项目配置"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 项目配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-测试启动"><span class="nav-number">1.1.3.</span> <span class="nav-text">3. 测试启动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发阶段"><span class="nav-number">1.2.</span> <span class="nav-text">开发阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-DAO层"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. DAO层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-业务层"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 业务层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-控制层"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. 控制层</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#准备工作"><span class="nav-number">1.</span> <span class="nav-text">准备工作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-导包"><span class="nav-number">1.1.</span> <span class="nav-text">1. 导包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-项目配置"><span class="nav-number">1.2.</span> <span class="nav-text">2. 项目配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-测试启动"><span class="nav-number">1.3.</span> <span class="nav-text">3. 测试启动</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#开发阶段"><span class="nav-number">2.</span> <span class="nav-text">开发阶段</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-DAO层"><span class="nav-number">2.1.</span> <span class="nav-text">1. DAO层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-业务层"><span class="nav-number">2.2.</span> <span class="nav-text">2. 业务层</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-控制层"><span class="nav-number">2.3.</span> <span class="nav-text">3. 控制层</span></a></li></ol></li></ol></div>
             
 
           </div>
