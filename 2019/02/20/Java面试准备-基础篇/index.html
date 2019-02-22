@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="java面试,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="本篇文章收集整理一些Java常考的基础问题，仅为准备面试之用。 基本类型和类对象的交换Java传参的有两种方式，一种是值传递，另一种是引用传递。而Java的引用传递不像C++的引用传递那样，C++的引用传递可以用于交换两个基本类型的变量值，因为C++的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而Java的引用，实际上是声明在栈上的变量对堆上的对象">
+<meta name="keywords" content="java面试">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java面试准备(基础篇)">
+<meta property="og:url" content="http://kenetgit.top/2019/02/20/Java面试准备-基础篇/index.html">
+<meta property="og:site_name" content="KenetGit&#39;s blog">
+<meta property="og:description" content="本篇文章收集整理一些Java常考的基础问题，仅为准备面试之用。 基本类型和类对象的交换Java传参的有两种方式，一种是值传递，另一种是引用传递。而Java的引用传递不像C++的引用传递那样，C++的引用传递可以用于交换两个基本类型的变量值，因为C++的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而Java的引用，实际上是声明在栈上的变量对堆上的对象">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://kenetgit.top/2019/02/20/Java面试准备-基础篇/exception.png">
+<meta property="og:updated_time" content="2019-02-22T15:47:34.011Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java面试准备(基础篇)">
+<meta name="twitter:description" content="本篇文章收集整理一些Java常考的基础问题，仅为准备面试之用。 基本类型和类对象的交换Java传参的有两种方式，一种是值传递，另一种是引用传递。而Java的引用传递不像C++的引用传递那样，C++的引用传递可以用于交换两个基本类型的变量值，因为C++的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而Java的引用，实际上是声明在栈上的变量对堆上的对象">
+<meta name="twitter:image" content="http://kenetgit.top/2019/02/20/Java面试准备-基础篇/exception.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"right","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://kenetgit.top/2019/02/20/Java面试准备-基础篇/">
+
+
+
+
+
+  <title>Java面试准备(基础篇) | KenetGit's blog</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-right page-post-detail">
+    <div class="headband"></div>
+    <!-- github角落 -->
+    <a href="https://github.com/KenetGit" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#fff; color:#151513; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">KenetGit's blog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Take the bull by the horns</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kenetgit.top/2019/02/20/Java面试准备-基础篇/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kenet">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/kenetgit-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KenetGit's blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Java面试准备(基础篇)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-02-20T19:38:44+08:00">
+                2019-02-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>本篇文章收集整理一些<code>Java</code>常考的基础问题，仅为准备面试之用。</p>
+<h4 id="基本类型和类对象的交换"><a href="#基本类型和类对象的交换" class="headerlink" title="基本类型和类对象的交换"></a>基本类型和类对象的交换</h4><p><code>Java</code>传参的有两种方式，一种是值传递，另一种是引用传递。而<code>Java</code>的引用传递不像<code>C++</code>的引用传递那样，<code>C++</code>的引用传递可以用于交换两个基本类型的变量值，因为<code>C++</code>的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而<code>Java</code>的引用，实际上是声明在栈上的变量对堆上的对象的一个引用，因此引用变量不是直接对内存地址进行操作，但是通过引用变量可以操作堆上的对象。</p>
+<p>基本类型值交换，通过将基本类型转换成其对应的包装器对象（传参时自动装箱），然后再通过类的反射机制，获取包装器对象的数据域，直接修改数据域，达到值交换的目的。</p>
+<p>类对象的交换，直接交换引用变量是不会得到预期结果的，因为交换引用变量改变的只是栈上的变量，当函数运行完，栈变量销毁。改变类对象的方法之一是用一个外部类对其包装，从而通过这样的包装类进行交换。其二，通过逐一的交换对象数据域的属性值也能达到目的。</p>
+<h4 id="装箱和拆箱"><a href="#装箱和拆箱" class="headerlink" title="装箱和拆箱"></a>装箱和拆箱</h4><p>首尔要说一下对象包装器，像<code>int</code>这样的基本类型转换为对象，所有的基本类型都有一个与之对应的类，就是包装器。例如，<code>int</code>对应<code>Integer</code>。其中，自动装箱是指基本类型到包装器的转换是自动转换的，就像是把一个值装到包装器中，所以称之为装箱。而自动拆箱与自动装箱相对，也就是从包装器对象转换为基本类型。值得举一个例子，<code>ArrayList&lt;Integer&gt;</code> 。注意，包装器的内容是不可变的，是<code>final</code>的。</p>
+<h4 id="对象构造、析构与初始化"><a href="#对象构造、析构与初始化" class="headerlink" title="对象构造、析构与初始化"></a>对象构造、析构与初始化</h4><p>在<code>Java</code>中，对象构造器内可以调用另一个重载的对象构造器；当使用初始化块对对象的数据域进行初始化时，调用构造器就会执行这些初始化块。而静态初始化块，则是当该类第一个被实例化时执行，静态初始化块只能用于对类的静态成员变量初始化。</p>
+<p>初始化对象时，可以使用<code>初始化代码块</code>，在创建每个对象实例的时候，初始化代码块就会被执行；使用<code>静态初始化代码块</code>，用于对类中的静态域进行初始化。</p>
+<p><code>Java</code>中没有对象析构，<code>java</code>有自己的垃圾回收机制，不需要开发者手动回收，因此不支持析构器；但是<code>Java</code>提供了<code>finalize()</code>方法，当需要对某些资源进行手动回收时，<code>finalize()</code>方法将在垃圾回收器清除对象前被调用。</p>
+<h4 id="深复制和浅复制"><a href="#深复制和浅复制" class="headerlink" title="深复制和浅复制"></a>深复制和浅复制</h4><ul>
+<li>浅拷贝：对象克隆时，对于属性是基本类型的域，克隆出独立的域，而对于子对象属性，则不会克隆出独立的对象，而是克隆时只是一个引用，说明此时克隆出来的对象和原对象共享了部分的数据，这种情况可能是不安全的。</li>
+<li>深拷贝：克隆时连通子对象一起进行独立的拷贝，克隆出来的对象和原对象不共享任何信息，克隆对象的修改不会影响原对象。</li>
+</ul>
+<p>我们先来看看<code>Object</code>的<code>clone</code>方法，可以看到它是一个<code>native</code>方法，并且注释中提及到，如果当前类没有实现<code>Cloneable</code>接口的话，调用<code>clone</code>方法将抛出异常。而这一切都是<code>Java</code>的底层机制所规定好的。而<code>Cloneable</code>接口其实什么都没有。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> * <span class="meta">@return</span>     a clone of <span class="keyword">this</span> instance.</span><br><span class="line"> * <span class="meta">@throws</span>  CloneNotSupportedException  <span class="keyword">if</span> the object<span class="string">'s class does not</span></span><br><span class="line"><span class="string"> *               support the &#123;@code Cloneable&#125; interface. Subclasses</span></span><br><span class="line"><span class="string"> *               that override the &#123;@code clone&#125; method can also</span></span><br><span class="line"><span class="string"> *               throw this exception to indicate that an instance cannot</span></span><br><span class="line"><span class="string"> *               be cloned.</span></span><br><span class="line"><span class="string"> * @see java.lang.Cloneable</span></span><br><span class="line"><span class="string"> */</span></span><br><span class="line"><span class="string">protected native Object clone() throws CloneNotSupportedException;</span></span><br></pre></td></tr></table></figure>
+<p>其次，我们可以看到<code>Object.clone()</code>是一个<code>protected</code>方法，而且这个<code>clone()</code>方法是执行“浅拷贝”，所以，如果想要执行深拷贝，需要重新定义clone()方法。</p>
+<p>使用Clone的方法的时候，<code>JVM</code>就会创建一个新的对象，将前面的对象的内容全部拷贝进去，用clone方法创建对象并不会调用任何构造函数。</p>
+<p>因为类中的数据域的变量可能引用了其他类对象，而这些对象又可能引用了其他对象，构成了嵌套引用，如果不逐一为这些对象进行深拷贝的话，浅拷贝只会简单地拷贝这些对象的引用，而不是创建新的对象实例。</p>
+<h4 id="创建对象的方式"><a href="#创建对象的方式" class="headerlink" title="创建对象的方式"></a>创建对象的方式</h4><ul>
+<li>我们常用的创建对象的方式当然是通过<code>new</code>关键字，这个时候类的构造器会被调动。</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Employee emp1 = <span class="keyword">new</span> Employee();</span><br><span class="line"></span><br><span class="line">0: new           #19          // class org/programming/mitra/exercises/Employee</span><br><span class="line"><span class="number">3</span>: dup</span><br><span class="line">4: invokespecial #21          // Method org/programming/mitra/exercises/Employee."":()V</span><br></pre></td></tr></table></figure>
+<ul>
+<li>上面我们介绍的<code>clone</code>方法，通过调用该方法，<code>JVM</code>会创建一个新的实例（默认执行的浅拷贝），将对象的内容全部拷贝到新的对象实例上，可见调用<code>clone</code>方法创建对象时不会执行构造函数，这一切是由<code>JVM</code>完成的。</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Employee emp4 = (Employee) emp3.clone();</span><br><span class="line"></span><br><span class="line">162: invokevirtual #87  // Method org/programming/mitra/exercises/Employee.clone ()Ljava/lang/Object;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>Java</code>提供的了反射机制，通过反射机制也可以创建对象实例。</li>
+<li>使用Class类的<code>newInstance</code>方法</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Employee emp2 = (Employee) Class.forName(<span class="string">"top.kenetgit.reflect-test.Employee"</span>).newInstance();</span><br><span class="line"><span class="comment">// 或者</span></span><br><span class="line">Employee emp2 = Employee.class.newInstance();</span><br><span class="line"></span><br><span class="line">51: invokevirtual    #70    // Method java/lang/Class.newInstance:()Ljava/lang/Object;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用<code>Constructor</code>类的<code>newInstance</code>方法</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Constructor&lt;Employee&gt; constructor = Employee.class.getConstructor();</span><br><span class="line">Employee emp3 = constructor.newInstance();</span><br><span class="line"></span><br><span class="line">111: invokevirtual  #80  // Method java/lang/reflect/Constructor.newInstance:([Ljava/lang/Object;)Ljava/lang/Object;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>使用反序列化：当我们序列化和反序列化一个对象，<code>JVM</code>会给我们创建一个单独的对象。在反序列化时，<code>JVM</code>创建对象并不会调用任何构造函数。为了反序列化一个对象，我们需要让我们的类实现<code>Serializable</code>接口。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ObjectInputStream in = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"data.obj"</span>));</span><br><span class="line">Employee emp5 = (Employee) in.readObject();</span><br><span class="line"></span><br><span class="line">261: invokevirtual  #118   </span><br><span class="line"><span class="comment">// Method java/io/ObjectInputStream.readObject:()Ljava/lang/Object;</span></span><br></pre></td></tr></table></figure>
+<p>我们从上面的字节码片段可以看到，除了第1个方法，其他4个方法全都转变为<code>invokevirtual</code>(创建对象的直接方法)，第一个方法转变为两个调用，<code>new</code>和i<code>nvokespecial</code>(构造函数调用)</p>
+<h4 id="继承与类型转换"><a href="#继承与类型转换" class="headerlink" title="继承与类型转换"></a>继承与类型转换</h4><p><code>super</code>关键字理解为指向<code>直接超类</code>的一个指针，通过<code>super</code>可以引用父类的方法，通过<code>super</code>可以调用父类的构造函数。</p>
+<h4 id="多态与动态绑定"><a href="#多态与动态绑定" class="headerlink" title="多态与动态绑定"></a>多态与动态绑定</h4><p>多态，可以理解为使用父类的指针来调用不同子类中实现的方法。</p>
+<p>多态的3个条件：</p>
+<ul>
+<li>继承</li>
+<li>方法重载</li>
+<li>父类型的引用指向子类的对象实例</li>
+</ul>
+<p>静态绑定，即编译器在编译阶段就能确定调用哪些方法。相对的，动态绑定，即当程序运行期间才能确定具体该调用哪个方法，例如，在子类中调用某方法，如果子类有该方法就直接调用，如果没有，就到超类中查找；为此<code>JVM</code>为每个类创建了一个方法表，通过方法的签名和参数列表对应实际应该调用的方法，这样在动态绑定时通过查表、匹配，就能确定调用哪个方法。</p>
+<p>多态的方法调用，是静态绑定的。编译器通过匹配被调用方法的属性，匹配候选的调用方法，最终确定调用哪个方法，期间涉及“重载解析”。</p>
+<h4 id="抽象类与接口"><a href="#抽象类与接口" class="headerlink" title="抽象类与接口"></a>抽象类与接口</h4><p>含有一个或多个抽象方法的类称为抽象类；子类继承抽象父类，必须继承实现父类的全部抽象方法，否则子类应声明为抽象类。抽象类是一种模板设计思想；抽象类可以继承多个接口，并且不需要全部实现接口的方法（或者一个都不实现），把实现的任务留给继承抽象类的子类。</p>
+<p>接口不能实例化，接口中的方法默认是<code>public</code>和<code>abstract</code>的；接口不能包含实例域和静态方法，但是可以有常量，接口中的常量默认是<code>public static final</code>的，这一点与接口不能实例化是一致的。</p>
+<p>接口与抽象类的比较：每个类只能继承一个抽象类，但是一个类可以实现多个接口，<code>java</code>是不支持多继承的；</p>
+<p>解决多接口的二义性：第一，超类优先；第二，如果实现的多个接口间存在同签名的默认方法冲突，<code>java</code>编译器会报错，让开发者自行解决这个二义性，开发者可以使用<code>InterfaceName.super</code>来选择要调用哪个接口的方法。</p>
+<h4 id="Object"><a href="#Object" class="headerlink" title="Object"></a>Object</h4><p>打开<code>Object</code>的源码，可以看到其内部很多方法在声明上使用了<code>native</code>关键字，<code>Object</code>的方法是值得我们去研究的，因为它是所有类的超类。其中，<code>equals</code>和<code>hashCode</code>是经常用到的一组。</p>
+<p><code>Object</code>的<code>equals</code>方法默认是两个对象引用的比较，也就是比较是否指向堆中的同一个对象实例（内存地址）；当两个引用指向同一个对象，显然<code>equals</code>就返回<code>true</code>；而在实际的业务中，我们往往需要比较的是两个对象的数据域是否相同从而判断两个对象是否“相等”，为了实现这种需求，需要重写<code>Object</code>的<code>equals</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Object的默认实现 </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object obj)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">this</span> == obj);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>理解学习如何重写<code>equals</code>，应该注意哪些问题。</p>
+<p>为什么重写<code>equals</code>方法一般都需要重写<code>hashCode</code>方法呢？下面我们一步步来分析其中的原因。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&gt; 看看Javadoc怎么介绍hashCode方法：</span><br><span class="line">&gt; * Returns a hash code value for the object. This method is</span><br><span class="line">&gt; * supported for the benefit of hash tables such as those provided by</span><br><span class="line">&gt; * &#123;@link java.util.HashMap&#125;.</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<p>该方法的注解中提到<code>hashCode</code>方法是为了提供对（集合框架中）类如 <code>hash tables</code>的支持，因为使用哈希存储的时候，就会调用对象的<code>hashCode</code>方法来计算对象所映射的<code>桶</code>。（<code>HashMap</code>、<code>HashSet</code>和<code>Hashtable</code>）</p>
+<p>我将会在另一篇学习笔记中，深入讨论<code>Obecjt</code>的方法，其中将讨论重写<code>equals</code>和<code>hashCode</code>。</p>
+<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>所有的异常都是由<code>Throwable</code>继承而来的，且在下一层分解为<code>Error</code>和<code>Exception</code>。<code>Error</code>类层次结构描述了<code>Java</code>运行时系统的内部错误和资源耗尽错误。应用程序一般不应该抛出这种错误。</p>
+<p><img src="/2019/02/20/Java面试准备-基础篇/exception.png" alt=""></p>
+<ol>
+<li><p>非受查异常： 派生于<code>Error</code>类或 <code>RuntimeException</code>类的所有异常。这些异常只有在运行期间才被检查出来。</p>
+</li>
+<li><p>受查异常：其他异常，如<code>IOException</code>。<code>IO</code>操作存在异常的可能，所以<code>Java</code>为这类操作声明了检查异常，即要求调用者出来该方法可能抛出的异常。编译器会检查是否为所有的受查异常提供了错误处理器。一个方法必须声明所有可能抛出的<strong>受查异常</strong>，或者捕获处理这些异常。</p>
+</li>
+<li><p>异常处理</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;&#125; <span class="keyword">catch</span>&#123;&#125; <span class="keyword">finally</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="内部类机制"><a href="#内部类机制" class="headerlink" title="内部类机制"></a>内部类机制</h4><p>定义在一个类内部的类就称为内部类，内部类对同一个包中的其他类是不可见的。内部类可以访问自身数据，也可以访问创建它的外围类对象的数据域。内部类对象有一个对外围类对象的隐式引用，这个引用在内部类的定义中是不可见的，因为这是由编译器完成的。</p>
+<p>在内部类中调用外部类的方法，通过<code>ClassName.this.attributes</code> 或者 <code>ClassName.this.method</code>。</p>
+<p>局部内部类是声明定义在方法体中的类，它的作用域被限制在该代码块的作用域中，也就是只有在该代码块内才能使用该类。</p>
+<p>内部类可以声明在接口中，并且自动成为<code>public static</code>。</p>
+<h4 id="Java四种引用类型"><a href="#Java四种引用类型" class="headerlink" title="Java四种引用类型"></a>Java四种引用类型</h4><blockquote>
+<p> <a href="https://www.cnblogs.com/liyutian/p/9690974.html" target="_blank" rel="noopener">参考博文</a></p>
+</blockquote>
+<ul>
+<li>强引用：<code>Java</code>中默认声明的就是强引用。<strong>只要强引用存在，垃圾回收器将永远不会回收被引用的对象</strong>，哪怕内存不足时，<code>JVM</code>也会直接抛出<code>OutOfMemoryError</code>，不会去回收。如果想中断强引用与对象之间的联系，可以显示的将强引用赋值为<code>null</code>，这样一来，<code>JVM</code>就可以在适当的时候回收该对象。</li>
+<li>软引用：软引用是用来描述一些非必需但仍有用的对象。<strong>在内存足够的时候，软引用对象不会被回收，只有在内存不足时，系统则会回收软引用对象，如果回收了软引用对象之后仍然没有足够的内存，才会抛出内存溢出异常</strong>。这种特性常常被用来实现缓存技术，比如网页缓存，图片缓存等</li>
+<li>弱引用：弱引用的引用强度比软引用要更弱一些，<strong>无论内存是否足够，只要<code>JVM</code>开始进行垃圾回收，那些被弱引用关联的对象都会被回收</strong></li>
+<li>虚引用：虚引用是最弱的一种引用关系，如果一个对象仅持有虚引用，那么它就和没有任何引用一样，它随时可能会被回收，在<code>JDK1.2</code>之后，用<code>PhantomReference</code> 类来表示，通过查看这个类的源码，发现它只有一个构造函数和一个<code>get()</code> 方法，而且它的<code>get()</code>方法仅仅是返回一个<code>null</code>，也就是说将永远无法通过虚引用来获取对象，虚引用必须要和<code>ReferenceQueue</code>引用队列一起使用</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PhantomReference</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">Reference</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * Returns this reference object's referent.  Because the referent of a</span></span><br><span class="line"><span class="comment">     * phantom reference is always inaccessible, this method always returns</span></span><br><span class="line"><span class="comment">     * &lt;code&gt;null&lt;/code&gt;.</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span>  &lt;code&gt;null&lt;/code&gt;</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">get</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">PhantomReference</span><span class="params">(T referent, ReferenceQueue&lt;? <span class="keyword">super</span> T&gt; q)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">super</span>(referent, q);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>引用队列 (<code>ReferenceQueue</code>) 可以与软引用、弱引用以及虚引用一起配合使用，当垃圾回收器准备回收一个对象时，如果发现它还有引用，那么就会在回收对象之前，把这个引用加入到与之关联的引用队列中去。程序可以通过判断引用队列中是否已经加入了引用，来判断被引用的对象是否将要被垃圾回收，这样就可以在对象被回收之前采取一些必要的措施。</p>
+</blockquote>
+<h4 id="泛型和泛型擦除"><a href="#泛型和泛型擦除" class="headerlink" title="泛型和泛型擦除"></a>泛型和泛型擦除</h4><blockquote>
+<p> 参考这篇文章: <a href="https://www.cnblogs.com/drizzlewithwind/p/6101081.html" target="_blank" rel="noopener">Java中泛型 类型擦除</a></p>
+</blockquote>
+<ul>
+<li>不能创建参数化类型的数组。因为经过类型替换后，会变成Pair[] </li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Pair&lt;String&gt;[] table = <span class="keyword">new</span> Pair&lt;String&gt;[<span class="number">10</span>];</span><br><span class="line"><span class="comment">// Cannot create a generic array of Pair&lt;String&gt;</span></span><br></pre></td></tr></table></figure>
+<ul>
+<li>重点了解一下泛型擦除的过程和规则</li>
+<li>因为泛型擦除，所以实际使用泛型时应该注意哪些问题</li>
+</ul>
+<h4 id="equals-和"><a href="#equals-和" class="headerlink" title="equals 和 =="></a>equals 和 ==</h4><ul>
+<li>== 的作用：<br>基本类型：比较的就是值是否相同<br>引用类型：比较的就是地址值是否相同</li>
+<li>equals 的作用：引用类型：默认情况下，比较的是地址值。但是可以根据情况自己重写该方法。一般重写都是自动生成，比较对象的成员变量值是否相同。</li>
+</ul>
+<h4 id="String系列"><a href="#String系列" class="headerlink" title="String系列"></a>String系列</h4><p>首先需要了解一下<code>字面常量</code>和<code>符号引用</code>。</p>
+<p><code>String</code>对象上的一切<code>change</code>操作都是返回新的<code>String</code>对象；而<code>StringBuiler</code>则是在原对象上进行操作。所以，如果需要修改一个<code>字符串</code>对象的值，应该使用<code>StringBuiler</code>而不是<code>String</code>。</p>
+<p><code>StringBuilder</code>和<code>StringBuffer</code>类拥有的成员属性以及成员方法基本相同，区别是<code>StringBuffer</code>类的成员方法前面多了一个关键字<code>synchronized</code>，所以<code>StringBuffer</code>是线程安全的。</p>
+<blockquote>
+<p>其他更为深入的介绍可以参考这篇博文：<a href="https://www.cnblogs.com/dolphin0520/p/3778589.html" target="_blank" rel="noopener">探秘Java中的String、StringBuilder以及StringBuffer</a></p>
+</blockquote>
+<h4 id="Java的语法糖"><a href="#Java的语法糖" class="headerlink" title="Java的语法糖"></a>Java的语法糖</h4><blockquote>
+<p>参考：<a href="https://www.cnblogs.com/qingshanli/p/9375040.html" target="_blank" rel="noopener">浅析java中的语法糖</a></p>
+</blockquote>
+<h4 id="NIO基础"><a href="#NIO基础" class="headerlink" title="NIO基础"></a>NIO基础</h4><p><code>NIO</code>即<code>New IO</code>，这个库是在<code>JDK1.4</code>中才引入的。NIO和IO有相同的作用和目的，但实现方式不同，NIO主要用到的是块，所以NIO的效率要比IO高很多。在Java API中提供了两套NIO，一套是针对标准输入输出NIO，另一套就是网络编程NIO。</p>
+<blockquote>
+<p>参考：<a href="https://www.cnblogs.com/xiaoxi/p/6576588.html" target="_blank" rel="noopener">Java NIO：IO与NIO的区别</a></p>
+</blockquote>
+<h4 id="native方法和JNI"><a href="#native方法和JNI" class="headerlink" title="native方法和JNI"></a>native方法和JNI</h4><p>这部分主要是<code>Android</code>开发需要了解的。</p>
+<blockquote>
+<p>参考：<a href="https://www.cnblogs.com/haitaofeiyang/p/7696013.html" target="_blank" rel="noopener">java native方法及JNI实例</a></p>
+</blockquote>
+<hr>
+<p>关于Java基础知识会持续更新~~</p>
+<hr>
+
+      
+    </div>
+    
+    
+    
+
+  <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束,感谢阅读-------------</div>
+    
+</div>
+    
+  </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/java面试/" rel="tag"># java面试</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/18/学习RESTful-API开发/" rel="next" title="学习RESTful-API开发">
+                <i class="fa fa-chevron-left"></i> 学习RESTful-API开发
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/22/深入理解Java虚拟机/" rel="prev" title="深入理解Java虚拟机">
+                深入理解Java虚拟机 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <img class="site-author-image" itemprop="image" src="/img/kenetgit-avatar.jpg" alt="Kenet">
+            
+              <p class="site-author-name" itemprop="name">Kenet</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+            <div class="links-of-author motion-element">
+                
+                  <span class="links-of-author-item">
+                    <a href="https://github.com/KenetGit" target="_blank" title="GitHub">
+                      
+                        <i class="fa fa-fw fa-github"></i>GitHub</a>
+                  </span>
+                
+                  <span class="links-of-author-item">
+                    <a href="mailto:fangjiamou@gmail.com" target="_blank" title="E-Mail">
+                      
+                        <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+                  </span>
+                
+            </div>
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本类型和类对象的交换"><span class="nav-number">1.</span> <span class="nav-text">基本类型和类对象的交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#装箱和拆箱"><span class="nav-number">2.</span> <span class="nav-text">装箱和拆箱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象构造、析构与初始化"><span class="nav-number">3.</span> <span class="nav-text">对象构造、析构与初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深复制和浅复制"><span class="nav-number">4.</span> <span class="nav-text">深复制和浅复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建对象的方式"><span class="nav-number">5.</span> <span class="nav-text">创建对象的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承与类型转换"><span class="nav-number">6.</span> <span class="nav-text">继承与类型转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态与动态绑定"><span class="nav-number">7.</span> <span class="nav-text">多态与动态绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抽象类与接口"><span class="nav-number">8.</span> <span class="nav-text">抽象类与接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object"><span class="nav-number">9.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常"><span class="nav-number">10.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内部类机制"><span class="nav-number">11.</span> <span class="nav-text">内部类机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java四种引用类型"><span class="nav-number">12.</span> <span class="nav-text">Java四种引用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#泛型和泛型擦除"><span class="nav-number">13.</span> <span class="nav-text">泛型和泛型擦除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#equals-和"><span class="nav-number">14.</span> <span class="nav-text">equals 和 ==</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String系列"><span class="nav-number">15.</span> <span class="nav-text">String系列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java的语法糖"><span class="nav-number">16.</span> <span class="nav-text">Java的语法糖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NIO基础"><span class="nav-number">17.</span> <span class="nav-text">NIO基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#native方法和JNI"><span class="nav-number">18.</span> <span class="nav-text">native方法和JNI</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Kenet</span>
+
+  
+</div>
+
+
+  <div class="powered-by"> </div>
+
+
+
+
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
