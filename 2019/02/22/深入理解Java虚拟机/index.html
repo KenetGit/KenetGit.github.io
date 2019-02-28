@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="java,jvm,">
 
 
 
@@ -79,17 +79,26 @@
 
 
 
-<meta name="description" content="虚拟机部分 Java虚拟机架构Java运行时数据区OOM和SOFJVM中常见的OutOfMemory和StackOverFlow产生的原理。 JVM和DVM对象内存分配和回收策略反射机制关于volatile关键字垃圾回收算法类的初始化过程类加载过程类文件结构内存模型判断对象已死三种类加载器双亲委派机制">
+<meta name="description" content="本文仅作为笔者学习《深入理解Java虚拟机》一书的笔记，本文中结合书中讲解和实验，附上自己的理解。 开门见山，先来一张java虚拟机的全家福。  自动内存管理机制Java内存区域与内存溢出异常1. Java运行时数据区程序计数器：是当前线程所执行的字节码的行号指示器。每个线程独有拥有一个程序计数器，为了在每次线程上下文切换后能恢复到线程执行的正确位置。如果线程正在执行的是Native方法，则计数器">
+<meta name="keywords" content="java,jvm">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深入理解Java虚拟机">
+<meta property="og:title" content="深入理解Java虚拟机(上)">
 <meta property="og:url" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/index.html">
 <meta property="og:site_name" content="KenetGit&#39;s blog">
-<meta property="og:description" content="虚拟机部分 Java虚拟机架构Java运行时数据区OOM和SOFJVM中常见的OutOfMemory和StackOverFlow产生的原理。 JVM和DVM对象内存分配和回收策略反射机制关于volatile关键字垃圾回收算法类的初始化过程类加载过程类文件结构内存模型判断对象已死三种类加载器双亲委派机制">
+<meta property="og:description" content="本文仅作为笔者学习《深入理解Java虚拟机》一书的笔记，本文中结合书中讲解和实验，附上自己的理解。 开门见山，先来一张java虚拟机的全家福。  自动内存管理机制Java内存区域与内存溢出异常1. Java运行时数据区程序计数器：是当前线程所执行的字节码的行号指示器。每个线程独有拥有一个程序计数器，为了在每次线程上下文切换后能恢复到线程执行的正确位置。如果线程正在执行的是Native方法，则计数器">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-22T15:46:31.642Z">
+<meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/jvm_rt.png">
+<meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/GCRoot.png">
+<meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/GCs.png">
+<meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classloader.png">
+<meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classloader.png">
+<meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/cinit.png">
+<meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classload.png">
+<meta property="og:updated_time" content="2019-02-28T13:15:49.990Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="深入理解Java虚拟机">
-<meta name="twitter:description" content="虚拟机部分 Java虚拟机架构Java运行时数据区OOM和SOFJVM中常见的OutOfMemory和StackOverFlow产生的原理。 JVM和DVM对象内存分配和回收策略反射机制关于volatile关键字垃圾回收算法类的初始化过程类加载过程类文件结构内存模型判断对象已死三种类加载器双亲委派机制">
+<meta name="twitter:title" content="深入理解Java虚拟机(上)">
+<meta name="twitter:description" content="本文仅作为笔者学习《深入理解Java虚拟机》一书的笔记，本文中结合书中讲解和实验，附上自己的理解。 开门见山，先来一张java虚拟机的全家福。  自动内存管理机制Java内存区域与内存溢出异常1. Java运行时数据区程序计数器：是当前线程所执行的字节码的行号指示器。每个线程独有拥有一个程序计数器，为了在每次线程上下文切换后能恢复到线程执行的正确位置。如果线程正在执行的是Native方法，则计数器">
+<meta name="twitter:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/jvm_rt.png">
 
 
 
@@ -125,7 +134,7 @@
 
 
 
-  <title>深入理解Java虚拟机 | KenetGit's blog</title>
+  <title>深入理解Java虚拟机(上) | KenetGit's blog</title>
   
 
 
@@ -270,7 +279,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">深入理解Java虚拟机</h1>
+          <h1 class="post-title" itemprop="name headline">深入理解Java虚拟机(上)</h1>
         
 
         <div class="post-meta">
@@ -320,9 +329,185 @@
       
 
       
-        <p>虚拟机部分</p>
-<h4 id="Java虚拟机架构"><a href="#Java虚拟机架构" class="headerlink" title="Java虚拟机架构"></a>Java虚拟机架构</h4><h4 id="Java运行时数据区"><a href="#Java运行时数据区" class="headerlink" title="Java运行时数据区"></a>Java运行时数据区</h4><h4 id="OOM和SOF"><a href="#OOM和SOF" class="headerlink" title="OOM和SOF"></a>OOM和SOF</h4><p><code>JVM</code>中常见的<code>OutOfMemory</code>和<code>StackOverFlow</code>产生的原理。</p>
-<h4 id="JVM和DVM"><a href="#JVM和DVM" class="headerlink" title="JVM和DVM"></a>JVM和DVM</h4><h4 id="对象内存分配和回收策略"><a href="#对象内存分配和回收策略" class="headerlink" title="对象内存分配和回收策略"></a>对象内存分配和回收策略</h4><h4 id="反射机制"><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h4><h4 id="关于volatile关键字"><a href="#关于volatile关键字" class="headerlink" title="关于volatile关键字"></a>关于volatile关键字</h4><h4 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h4><h4 id="类的初始化过程"><a href="#类的初始化过程" class="headerlink" title="类的初始化过程"></a>类的初始化过程</h4><h4 id="类加载过程"><a href="#类加载过程" class="headerlink" title="类加载过程"></a>类加载过程</h4><h4 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h4><h4 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h4><h4 id="判断对象已死"><a href="#判断对象已死" class="headerlink" title="判断对象已死"></a>判断对象已死</h4><h4 id="三种类加载器"><a href="#三种类加载器" class="headerlink" title="三种类加载器"></a>三种类加载器</h4><h4 id="双亲委派机制"><a href="#双亲委派机制" class="headerlink" title="双亲委派机制"></a>双亲委派机制</h4>
+        <p>本文仅作为笔者学习《深入理解Java虚拟机》一书的笔记，本文中结合书中讲解和实验，附上自己的理解。</p>
+<p>开门见山，先来一张<code>java</code>虚拟机的全家福。</p>
+<p><img src="/2019/02/22/深入理解Java虚拟机/jvm_rt.png" alt=""></p>
+<h2 id="自动内存管理机制"><a href="#自动内存管理机制" class="headerlink" title="自动内存管理机制"></a>自动内存管理机制</h2><h3 id="Java内存区域与内存溢出异常"><a href="#Java内存区域与内存溢出异常" class="headerlink" title="Java内存区域与内存溢出异常"></a>Java内存区域与内存溢出异常</h3><h4 id="1-Java运行时数据区"><a href="#1-Java运行时数据区" class="headerlink" title="1. Java运行时数据区"></a>1. Java运行时数据区</h4><p>程序计数器：是当前线程所执行的字节码的行号指示器。每个线程独有拥有一个程序计数器，为了在每次线程上下文切换后能恢复到线程执行的正确位置。如果线程正在执行的是<code>Native</code>方法，则计数器的值为空 (undefined)。</p>
+<p>虚拟机栈：描述的是Java方法执行的内存模型，即每个方法在执行时都会创建一个栈帧用于存储局部变量表、操作数栈、动态链接、方法出口等信息。每一个方法从调用到执行完毕，对应着一个栈帧在虚拟机栈中的入栈和出栈的过程。其中，局部变量表的大小在编译期就确定了，所以一个栈帧需要分配多少空间给局部变量也是完全确定的。</p>
+<p>本地方法栈：和虚拟机栈类似，但是本地方法栈针对的是虚拟机使用到的<code>Native</code>方法服务。</p>
+<p>Java堆：是虚拟机所管理的内存中最大的一块，是被所有线程共享的一块内存区域，在虚拟机启动时创建。堆内存是唯一目的是用来存放对象实例，几乎所有对象实例都在这块区域分配内存（注意是几乎，而不是全部）。Java堆也是垃圾收集器管理的主要区域。从内存回收的角度看，由于现在的收集器采用分代收集算法，所以Java堆也相应地可以分为新生代和老年代 （顾名思义，新生和老年指的是对象实例在内存中的存活时间）。</p>
+<p>方法区：也是各个线程共享的内存区域，用于存储已被虚拟机加载的类信息、常量、静态变量、即时编译器编译后的代码等数据。</p>
+<ul>
+<li>运行时常量池：是方法区是一部分，Class文件除了有类的版本、字段、方法、接口等信息之外，常量池是用于存放编译期间生成的各种字面量和符号引用，这部分内存将在类加载进入方法区的运行时常量池中存放。常量池具有动态性，并不是只有编译期产生的常量才能进入常量池，运行期产生的新常量也有可能被放入运行时常量池，如<code>String.intern()</code>，运行时常量池属于方法区的一部分，所以受到方法区大小的限制。</li>
+</ul>
+<p>补充</p>
+<ul>
+<li>直接内存：不是运行时数据区的一部分。<code>JDK 1.4</code>引入了<code>NIO</code>类，一种基于通道和缓冲区的I/O方式，可以使用<code>Native</code>库直接分配堆外内存，然后通过一个存储在Java堆中的DirectByteBuffer对象作为这块内存的引用进行操作，如此能在一些场景中提高性能，避免在Java堆和Native堆之间来回复制数据。</li>
+</ul>
+<h4 id="2-对象的创建"><a href="#2-对象的创建" class="headerlink" title="2. 对象的创建"></a>2. 对象的创建</h4><p>以关键字<code>new</code>为例，当虚拟机遇到一条<code>new</code>指令时，首先将去检查这个指令的参数是否能够在常量池中定位到一个类的符号引用，并且检查这个符号引用代表的类是否已经被加载、解析和初始化，如果没有，那就必须先执行相应的类加载过程。</p>
+<p>在类加载检查通过之后，虚拟机将为新的对象实例分配内存，即在Java堆上分配，对象所需要的内存大小在类加载完毕后已经完全确定，所以为对象分配内存就是简单从Java堆上划分一块小区域。</p>
+<p>接下来，虚拟机将对该对象实例进行必要的设置，例如这个对象是哪个类的实例、如何找到该类的元数据信息和对象的哈希码等，而这些信息存放在对象的<code>对象头</code>。完成这些设置工作之后，从虚拟机的角度，一个新的对象就产生了。但是从java程序的角度，只有当构造函数被调用执行完毕后，新的对象才算真正地产生。</p>
+<blockquote>
+<p>几篇值得参考的博文：<a href="https://www.cnblogs.com/Eason-S/p/5658188.html" target="_blank" rel="noopener">Java虚拟机体系结构分析</a></p>
+</blockquote>
+<h3 id="判断对象已死"><a href="#判断对象已死" class="headerlink" title="判断对象已死"></a>判断对象已死</h3><p><code>GC</code>在对<code>java堆</code>进行内存回收之前，需要先判断哪些对象还“存活”着（还被引用着的对象），哪些对象已经“死去”（不可能再被使用的对象）。</p>
+<h4 id="1-引用计数法"><a href="#1-引用计数法" class="headerlink" title="1. 引用计数法"></a>1. 引用计数法</h4><p>引用计数法是一种用于判断对象是否存活的简单且高效的算法，其主要是思想是：给对象中添加一个引用计数器，每当有新变量的引用该对象的时候，计数器值就加1；当引用失效的时候，计数器就减1；任何时刻计数器为0的对象就是不可能再被使用的。</p>
+<p>引用计数算法虽然实现简单且高效，但是它无法解决对象之间的循环引用的问题，因此Java虚拟机并没有采用引用计数算法来管理内存。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RefenreceCountingGc</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> Object instance = <span class="keyword">null</span>;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line">	<span class="comment">// 作用就是占一些内存而已</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">byte</span>[] bigSize = <span class="keyword">new</span> <span class="keyword">byte</span>[ <span class="number">4</span> * _1MB];</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">		RefenreceCountingGc objA = <span class="keyword">new</span> RefenreceCountingGc();</span><br><span class="line">		RefenreceCountingGc objB = <span class="keyword">new</span> RefenreceCountingGc();</span><br><span class="line">		</span><br><span class="line">		<span class="comment">// 相互引用但是照样被JVM回收，说明不是使用引用计数</span></span><br><span class="line">		objA.instance = objB;</span><br><span class="line">		objB.instance = objA;</span><br><span class="line">		objA = <span class="keyword">null</span>;</span><br><span class="line">		objB = <span class="keyword">null</span>;</span><br><span class="line">		</span><br><span class="line">		System.gc();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-可达性分析算法"><a href="#2-可达性分析算法" class="headerlink" title="2. 可达性分析算法"></a>2. 可达性分析算法</h4><p>主流的商用程序语言都是使用可达性分析来判断对象是否存活，这一算法的基本思想是，通过一系列被称为<code>GC Roots</code>的对象作为起始点，从这些结点开始向下搜索，搜索所走过的路径称为引用链（Reference Chain），当一个对象到<code>GC Roots</code>没有任何引用链相连的时候，就说明不存在任何引用指向这个对象，即这个对象是不可用的。</p>
+<p><img src="/2019/02/22/深入理解Java虚拟机/GCRoot.png" alt=""></p>
+<p>虽然<code>obj5</code>、<code>obj6</code>和<code>obj7</code>是相关关联的，但是它们到<code>GC Root</code>是不可达的，因此它们会被判定为可回收的对象。但是这些不可达的对象并不是“非死不可”的，这时候它们只是第一次被标记为可以收回而已，被标记的对象还有一次拯救自己的机会，在下面【4】关于对象真正死亡的两次标记中将介绍这一原理。</p>
+<p>在<code>Java</code>中，可作为<code>GC Root</code>的对象包括以下几种：</p>
+<ul>
+<li>虚拟机栈中引用的对象</li>
+<li>方法区中类静态属性引用的对象</li>
+<li>方法区中常量引用的对象</li>
+<li>本地方法栈中<code>JNI</code>（<code>Native</code>方法）中引用的对象</li>
+</ul>
+<h4 id="3-Java的4种引用类型"><a href="#3-Java的4种引用类型" class="headerlink" title="3. Java的4种引用类型"></a>3. Java的4种引用类型</h4><p><code>JDK1.2</code>之后，<code>Java</code>对引用的概念进行了扩充，将引用分为<code>强引用</code>，<code>软引用</code>，<code>弱引用</code>和<code>虚引用</code>这四种。</p>
+<ul>
+<li>强引用：一般通过<code>new</code>关键创建的对象都是强用的，如<code>Object obj = new Object()</code>，只要强引用还存在，垃圾回收器就永远不会回收该引用的对象。</li>
+<li>软引用：软引用用来描述一些还有用但并非必须的对象，对于软引用关联着的对象，在将要发生<code>OOM</code>异常之前，将会把这些对象列入回收范围之中进行第二次回收，如果这次回收后还没有足够的内存，这时才会抛出<code>OOM</code>异常。（<code>SoftReference</code>）</li>
+<li>弱引用：也是用来描述非必须对象的，但是它的强度比软引用更弱一些，被弱引用关联的对象只能<strong>生存到下一次垃圾回收</strong>之前，也就是说该对象的生存时间相当于只有一次垃圾回收周期。当垃圾回收开始工作时，不管内存是否足够，都会回收掉<strong>只被</strong>软引用关联的对象。(<code>WeakReference</code>)</li>
+<li>虚引用：也称为幻影引用，是最弱的一种引用关系。一个对象是否有虚引用对象的存在，完全不会影响该对象的生存时间；同时，无法通过虚引用来获取一个对象实例，从以上的解释可见其“幻影”之意。为一个对象设置虚引用的唯一目的，就是能在这个对象被垃圾回收器回收的时候能够收到一个系统通知。(<code>PhantomReference</code>)</li>
+</ul>
+<h4 id="4-两次标记宣告对象消亡"><a href="#4-两次标记宣告对象消亡" class="headerlink" title="4. 两次标记宣告对象消亡"></a>4. 两次标记宣告对象消亡</h4><p>要确切地宣告一个对象死亡，<strong>至少</strong>要经历两次标记过程。（“至少”这个限定词是书上写的，但是个人理解，“至少”两次也是“至多”两次“，因为<code>finalize()</code>只能被执行一次，即对象只有一次复活的机会）</p>
+<p>第一次：如果对象在进行可达性分析后被发现没有与<code>GC Root</code>相连接的引用链，那它就会被第一次标记并且进行一次筛选，筛选的条件是此对象是否有必要执行<code>finalize()</code>方法（个人理解为标记是否该执行<code>finalize()</code>方法）。当对象没有覆盖实现<code>finalize()</code>方法或者有覆盖但是<code>finalize()</code>已经被调用过一次，虚拟机将认为没有必要执行<code>finalize()</code>，从而标记“非死不可”。</p>
+<blockquote>
+<p>注意：如果有覆盖实现<code>finalize()</code>，则<code>finalize()</code>是一定会被执行一次的，从而虚拟机会在这次筛选将其标记为“有必要执行”。</p>
+</blockquote>
+<p>第二次：如果第一次筛选中，对象被标记为“应该执行<code>finalize()</code>方法”，那么经过第一次标记后，对象会被放入一个<code>F-Queue</code>的队列中，并且在稍后由一个虚拟机自动建立的、低优先级的，叫做<code>Finalizer</code>的线程去处理<code>F-Queue</code>队列，即<code>Finalizer</code>线程会负责去执行存放在队列中的对象的<code>finalize()</code>方法。但是虚拟机并不会保证等待<code>finalize()</code>完全执行完才回收对象，原因是，如果在<code>finalize()</code>写了一个死循环，就会导致队列中的其他对象无限等待，甚至导致内存回收子系统崩溃。</p>
+<blockquote>
+<p><code>finalize()</code>方法是独享逃脱死亡的最后一次机会，对象如果想拯救自己，只需要在<code>finalzie()</code>方法中重新与任何一个可达对象建立关联，那么在<code>F-Queue</code>队列中被执行之后，对象复活，同时该对象的<code>finalize()</code>方法已经被执行过一次，下一轮标记的时候它就是“必死无疑”了。</p>
+</blockquote>
+<h3 id="垃圾收集算法"><a href="#垃圾收集算法" class="headerlink" title="垃圾收集算法"></a>垃圾收集算法</h3><ul>
+<li><strong>标记-清除算法</strong>：顾名思义，该算法分为“标记”和“清除”两个阶段，首先标记处需要回收的对象（可达分析算法等），标记完成后，统一回收所有被标记的对象。标记-清除算法主要有两方面不足，第一是效率问题，其标记和清除过程的效率都不高（为什么不高，个人还没有了解）；第二空间问题，标记-清除之后产生大量的不连续的内存碎片，导致以后想给大对象分配内存的时候就会因为找不到足够的连续内存，而不得不提前触发另一次垃圾回收动作。</li>
+<li><strong>复制算法</strong>：复制算法把内存等容量划分为大小相等的两块，每次只使用其中的一块，当这一块的内存用完了，就将还存活的对象复制到另一块，然后把这一块的内存空间一次性清楚掉。复制算法的空间代价太高，需要牺牲一半的内存空间。</li>
+<li><strong>标记-整理算法</strong>：标记-整理算法在标记阶段与标记-清除算法是一样的，不同的是，在清除阶段，不是直接对可回收对象进行清理，而是让所有存活的对象向一端移动（内存移动，内存紧凑），然后直接清理掉端界限以外的空间，从而得到大量的连续内存空间。</li>
+<li><strong>分代收集算法</strong>：分代收集算法，根据对象的存活时间的长短，将内存划分为几块。一般是将<code>Java</code>堆分为新生代和老年代，这样就可以根据不同代的特点采取不同的回收算法。新生代的对象存活时间较短，可以使用“复制算法”，而老年代存活时间较长，可以使用“标记-清理算法”，或者“标记-整理算法”。</li>
+</ul>
+<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p><img src="/2019/02/22/深入理解Java虚拟机/GCs.png" alt=""></p>
+<p>注：图中如果两个收集器之间存在连线， 表示可以搭配使用。</p>
+<h3 id="对象内存分配和回收策略"><a href="#对象内存分配和回收策略" class="headerlink" title="对象内存分配和回收策略"></a>对象内存分配和回收策略</h3><h2 id="虚拟机执行子系统"><a href="#虚拟机执行子系统" class="headerlink" title="虚拟机执行子系统"></a>虚拟机执行子系统</h2><h3 id="类文件结构"><a href="#类文件结构" class="headerlink" title="类文件结构"></a>类文件结构</h3><p>虚拟机和字节码的存储格式是实现语言无关性的基础。Java虚拟机不和包括Java在内的任何一门语言绑定，它只与<code>Class文件</code>这种特定的二进制文件格式所关联，<code>Class文件</code>中包含了<code>Java虚拟机</code>指令集和符号表以及若干其他辅助信息。Java语言中的各种变量、关键字和运算符的语义最终都是由多条字节码指令组合而成的。</p>
+<p>以下结合例子介绍类文件的字节码结构，通过<code>javap</code>。</p>
+<blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&gt; javap是 Java Class文件分解器，可以反编译（即对javac编译的文件进行反编译），也可以查看java编译器生成的字节码</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClass</span> <span class="keyword">implements</span> <span class="title">Serializable</span>, <span class="title">Cloneable</span></span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> field1;</span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> field2;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getField1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> field1;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getField2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> field2;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setField1</span><span class="params">(<span class="keyword">int</span> field1)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.field1 = field1;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setField2</span><span class="params">(<span class="keyword">int</span> field2)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">this</span>.field2 = field2;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="Magic-number"><a href="#Magic-number" class="headerlink" title="Magic number"></a>Magic number</h4><p>每个Class文件的头四个字节称为魔数，它的唯一作用是确定这个文件是否为一个被虚拟机接收的Class文件。紧接着魔数的后面四个字节存储的是Class文件的版本号（次版本号和主版本号）。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">  Last modified 2019-2-28; size 560 bytes</span><br><span class="line">  MD5 checksum f2d8c714084140167940bf347d7672db</span><br><span class="line">  Compiled from &quot;TestClass.java&quot;</span><br><span class="line">public final class oom_and_sof.TestClass implements java.io.Serializable,java.lang.Cloneable</span><br><span class="line">  minor version: 0</span><br><span class="line">  major version: 52</span><br></pre></td></tr></table></figure>
+<h4 id="常量池"><a href="#常量池" class="headerlink" title="常量池"></a>常量池</h4><p>常量池中主要存放两大类常量：字面量和符号引用。这里字面量的概念接近于Java语言层面的常量概念，如文本字符串、声明为final的常量值等。而符号引用则属于编译原理方面的概念，包括以下3类常量：</p>
+<ul>
+<li>类和接口的全限定名</li>
+<li>字段的名称和描述符</li>
+<li>方法的名称和描述符</li>
+</ul>
+<p>Java代码在进行<code>javac</code>编译的时候并不像C和C++编译期间有“连接”这一步骤，而是在虚拟机加载Class文件的时候进行动态链接。所以说，在Class文件中不会保存各个方法、字段的最终内存布局信息。存放在Class文件常量池的字段、方法的符号引用，只有经过运行期的转换，才能得到真正的内存入口地址，从而才能被虚拟机使用。</p>
+<p>当虚拟机运行时，需要从常量池中获取对应的符号引用，然后在类创建时或运行时，将符号引用解析、翻译到具体的内存地址之中。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">Constant pool:</span><br><span class="line">   #1 = Methodref          #5.#23         // java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">   #2 = Fieldref           #4.#24         // oom_and_sof/TestClass.field1:I</span><br><span class="line">   #3 = Fieldref           #4.#25         // oom_and_sof/TestClass.field2:I</span><br><span class="line">   #4 = Class              #26            // oom_and_sof/TestClass</span><br><span class="line">   #5 = Class              #27            // java/lang/Object</span><br><span class="line">   #6 = Class              #28            // java/io/Serializable</span><br><span class="line">   #7 = Class              #29            // java/lang/Cloneable</span><br><span class="line">   #8 = Utf8               field1</span><br><span class="line">   #9 = Utf8               I</span><br><span class="line">  #10 = Utf8               field2</span><br><span class="line">  #11 = Utf8               &lt;init&gt;</span><br><span class="line">  #12 = Utf8               ()V</span><br><span class="line">  #13 = Utf8               Code</span><br><span class="line">  #14 = Utf8               LineNumberTable</span><br><span class="line">  #15 = Utf8               getField1</span><br><span class="line">  #16 = Utf8               ()I</span><br><span class="line">  #17 = Utf8               getField2</span><br><span class="line">  #18 = Utf8               setField1</span><br><span class="line">  #19 = Utf8               (I)V</span><br><span class="line">  #20 = Utf8               setField2</span><br><span class="line">  #21 = Utf8               SourceFile</span><br><span class="line">  #22 = Utf8               TestClass.java</span><br><span class="line">  #23 = NameAndType        #11:#12        // &quot;&lt;init&gt;&quot;:()V</span><br><span class="line">  #24 = NameAndType        #8:#9          // field1:I</span><br><span class="line">  #25 = NameAndType        #10:#9         // field2:I</span><br><span class="line">  #26 = Utf8               oom_and_sof/TestClass</span><br><span class="line">  #27 = Utf8               java/lang/Object</span><br><span class="line">  #28 = Utf8               java/io/Serializable</span><br><span class="line">  #29 = Utf8               java/lang/Cloneable</span><br></pre></td></tr></table></figure>
+<h4 id="访问标志"><a href="#访问标志" class="headerlink" title="访问标志"></a>访问标志</h4><p>访问标志用于表示一些类或接口层次的访问信息，包括：这个Class是类还是接口；是否定义为<code>public</code>类型；是否定义为<code>abstract</code>类型；如果是类的话，是否声明为<code>final</code>类型等。</p>
+<p>常见的访问标志：</p>
+<table>
+<thead>
+<tr>
+<th>标志名称</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ACC_PUBLIC</td>
+<td>是否为public类型</td>
+</tr>
+<tr>
+<td>ACC_FINAL</td>
+<td>是否被声明为final，只能用在类</td>
+</tr>
+<tr>
+<td>ACC_SUPER</td>
+<td>是否允许使用invokespecial字节码指令的新语意</td>
+</tr>
+<tr>
+<td>ACC_INTERFACE</td>
+<td>标示这是一个接口</td>
+</tr>
+<tr>
+<td>ACC_ABSTRACT</td>
+<td>是否为abstract类型，对于接口和抽象类来说，此标志值为真，其他为假</td>
+</tr>
+</tbody>
+</table>
+<p>在我们所反编译的Class文件中，<code>TestClass</code>类的访问标志如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">flags: ACC_PUBLIC, ACC_FINAL, ACC_SUPER</span><br></pre></td></tr></table></figure>
+<h4 id="类索引、父类索引和接口索引集合"><a href="#类索引、父类索引和接口索引集合" class="headerlink" title="类索引、父类索引和接口索引集合"></a>类索引、父类索引和接口索引集合</h4><p>Class文件中由这三项数据来确定一个类的继承关系。类索引用于确定这个类的全限定名，父类索引用于确定这个类的直接父类的全限定名（Java不支持多继承，所以除了Object没有父类之外，其他类有且只有一个父类索引），接口索引集合用于描述这个类实现了哪些接口，按照从<code>implements</code>出现的次序。</p>
+<h4 id="字段表集合"><a href="#字段表集合" class="headerlink" title="字段表集合"></a>字段表集合</h4><p>用于描述接口或类中声明的变量。字段包括类级变量和实例级变量，但是不包括在方法内部声明的局部变量。描述资格字段的信息有：字段的作用域，是实例级还是类级（是否用<code>static</code>修饰），可变性（<code>final</code>），并发可见性（<code>volatile</code>修饰符）,可否被序列化（<code>transient</code>修饰符），数据字段类型（基本类型、对象or数组），字段名称。其中，字段的名称和字段的数据类型需要通过常量池中的常量来描述。</p>
+<h4 id="方法表集合"><a href="#方法表集合" class="headerlink" title="方法表集合"></a>方法表集合</h4><p>Java里的Java代码，经过编译器编译成字节码指令后，存放在方法属性的集合中名为<code>code</code>的属性里。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  public oom_and_sof.TestClass();</span><br><span class="line">    descriptor: ()V</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=1, locals=1, args_size=1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: invokespecial #1                  // Method java/lang/Object.&quot;&lt;init&gt;&quot;:()V</span><br><span class="line">         4: return</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 6: 0</span><br><span class="line"></span><br><span class="line">  public int getField1();</span><br><span class="line">    descriptor: ()I</span><br><span class="line">    flags: ACC_PUBLIC</span><br><span class="line">    Code:</span><br><span class="line">      stack=1, locals=1, args_size=1</span><br><span class="line">         0: aload_0</span><br><span class="line">         1: getfield      #2                  // Field field1:I</span><br><span class="line">         4: ireturn</span><br><span class="line">      LineNumberTable:</span><br><span class="line">        line 12: 0</span><br><span class="line">	...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="虚拟机类加载机制"><a href="#虚拟机类加载机制" class="headerlink" title="虚拟机类加载机制"></a>虚拟机类加载机制</h3><p>在Java语言中，类型的加载、连接和初始化过程都是程序运行期间完成的。</p>
+<h4 id="1-类加载的时机"><a href="#1-类加载的时机" class="headerlink" title="1. 类加载的时机"></a>1. 类加载的时机</h4><p>类从被加载到虚拟机内存中开始，到卸载出内存为止，要经过7个阶段，其中，验证、准备和解析3个阶段统称为连接。一个类的生命周期如下图所示：</p>
+<p><img src="/2019/02/22/深入理解Java虚拟机/classloader.png" alt=""></p>
+<p>其中，加载、验证、准备、初始化和卸载这5个阶段的顺序是确定的，类的加载过程必须这种顺序（未必是连续的）开始，而解析阶段则不一定：在某些情况下可以在初始化之后再开始解析，这是为了支持Java的动态绑定。</p>
+<p>虚拟机规范严格规定了以下5种情况必须对类进行初始化（加载、验证、准备自然在此之前）</p>
+<ul>
+<li>遇到<code>new</code>、<code>getstatic</code>、<code>putstatic</code>、<code>invokestatic</code>这4条字节码指令时，如果类还可以初始化就应该先触发初始化。对应的场景：使用new创建对象，读取或设置一个静态字段以及调用一个类的静态方法。</li>
+<li>使用<code>java.lang.reflect</code>包的方法对类进行反射调用的时候，如果类还没有执行过初始化，就需要先触发类的初始化。（比如，使用反射创建类对象，而不是使用<code>new</code>关键字）</li>
+<li>当初始化一个类的时候，如果其父类还没进行初始化，则先触发其父类的初始化。但是一个接口在初始化时，并不要其父接口都完成了初始化，只有在真正使用到父接口的时候才会初始化。</li>
+<li>当虚拟机启动时，用户需要指定一个指定的主类（包含main()方法的那个类），虚拟机就会先初始化这个主类。</li>
+<li>最后一种是使用<code>java.lang.invoke.MethodHandle</code>实例的时候，解析的结果为<code>REF_getstatic</code>、<code>REF_putstatic</code>和<code>REF_invokestatic</code>的方法句柄，并且这个方法所对应的对象还没有进行初始化，则需要先触发其初始化。（这种情况和使用反射创建对象类似）</li>
+</ul>
+<h4 id="2-类加载的过程"><a href="#2-类加载的过程" class="headerlink" title="2. 类加载的过程"></a>2. 类加载的过程</h4><p>Java虚拟机中类的加载全过程包括：加载，验证，准备，解析和初始化这5个阶段。</p>
+<p><img src="/2019/02/22/深入理解Java虚拟机/classloader.png" alt=""></p>
+<p>以下简单叙述一下各个阶段进行的动作</p>
+<h5 id="加载"><a href="#加载" class="headerlink" title="加载"></a>加载</h5><p>加载阶段，虚拟机需要完成如下3件事：</p>
+<ol>
+<li>通过一个类的全限定名来获取定义此类的二进制字节流</li>
+<li>将这个字节流所代表的静态存储结构转换为方法区的运行时的数据结构</li>
+<li>在内存中生成一个代表这个类的<code>java.lang.Class</code>对象，作为方法区这个类的各种数据的访问入口</li>
+</ol>
+<p>加载阶段完成后，虚拟机外部的二进制字节流就按照虚拟机需要的格式存储在方法区之中。然后在内存之中实例化一个<code>java.lang.Class</code>类的对象（并没有明确规定是在Java堆还是方法区，对于<code>HotSpot</code>虚拟机则是存放在方法区），这个<code>Class</code>对象将作为程序访问方法区中的这些类型的接口。</p>
+<h5 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h5><p>验证阶段是属于“连接“的第一步，这一步目的是确保<code>Class</code>文件的字节流中包含的信息符合当前虚拟机的要去，并且不会危害到虚拟机自身安全。这些验证有如下几种：</p>
+<ol>
+<li>文件格式验证：验证一个字节流是否符合<code>Class</code>文件格式的规范，并且能被当前版本的虚拟机处理。</li>
+<li>元数据验证：对字节码描述的信息进行语义分析，以保证其描述的信息符合Java语言犯规的要求。</li>
+<li>字节码验证：通过数据流和控制流分析，确定程序语义是合法的、符合逻辑的。</li>
+<li>符号引用验证：发生在虚拟机将符号引用转换为直接引用的时候，这个动作发生在“连接”阶段的第三个步骤，即解析阶段中。符号引用验证是对类自身以外的信息进行匹配性校验。符号引用验证为的是确保解析动作能够正常被执行。通常包括：<ul>
+<li>符号引用中通过字符串描述的全限定名是否能找到对应的类</li>
+<li>在指定类中是否存在符合方法的字段描述符以及简单名称所描述的方法和字段</li>
+<li>符号引用中的类、字段、方法的访问性，是否可以被当前类所访问。</li>
+</ul>
+</li>
+</ol>
+<h5 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h5><p>准备阶段是正式为<strong>类级变量</strong>分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中进行分配。注意这里初始化的是类级变量，即被<code>static</code>修饰的那些变量，所以这些静态变量是在方法区中进行内存分配的，而<strong>实例级变量</strong>则是随着对象实例化的时候一起在Java堆中进行内存分配。其次，这里初始化不是“构造函数”那样的初始化，而只是将这些类级变量初始化对应的“零值”。对于Java程序意义上的初始化，即构造函数，要等到“初始化阶段”才会发生。</p>
+<h5 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h5><p>解析阶段是虚拟机将常量池中的符号引用替换为直接引用的过程。符号引用只是椅子符号用来描述所引用的目的，与内存布局无关；而直接引用则是和虚拟机内存布局相关的，直接引用可以是直接指向目标的指针。有了直接引用，意味着目的已经在内存中了。</p>
+<h5 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h5><p>类的初始化是类加载的最后一步，到了初始化结点，就开始执行用户代码（或者说是字节码）。在准备阶段，类级变量已经被赋值过一次（赋零值），在初始化阶段，则是执行用户代码中的类构造器<code>&lt;clinit&gt;</code>。</p>
+<p>注意，类构造器与构造函数不是一回事。<code>&lt;clinit&gt;</code>是由编译器自动收集类中的所有类变量的赋值动作和静态语句块<code>static{}</code>中的语句合并产生的。</p>
+<p><img src="/2019/02/22/深入理解Java虚拟机/cinit.png" alt=""></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClass</span> <span class="keyword">implements</span> <span class="title">Serializable</span>, <span class="title">Cloneable</span></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> s;</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		s = <span class="number">12</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> field1;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getField1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> field1;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>&lt;clinit&gt;</code>与类的构造函数不一样，它不需要显式地调用父类的构造器，这些交给虚拟机来保证执行。因此，虚拟机中第一个被执行的<code>&lt;clinit&gt;</code>方法一定是<code>Object</code>的构造器。虚拟机还会保证一个类的<code>&lt;clinit&gt;</code>方法在多线程环境中能被正确地加锁、同步，当有一个线程执行一个类的<code>&lt;clinit&gt;</code>方法时，其他线程就得阻塞，而当<code>&lt;clinit&gt;</code>被执行完之后，其他阻塞线程不会再去执行它。所以，<strong>在同一个类加载器下，一个类型只会被初始化一次</strong>。</p>
+<h4 id="3-类与类加载器"><a href="#3-类与类加载器" class="headerlink" title="3. 类与类加载器"></a>3. 类与类加载器</h4><p>重点：对于任何一个类，要确定它在虚拟机中的唯一性，需要由加载它的类加载器和这个类本身一起确立，每一个类加载器都拥有一个独立的类名称空间。换句话说，比较两个类是否“相等”，只有当这两个类是由同一个类加载器所加载才有意义，否则，即使这两个类来自同一个<code>Class</code>文件，被同一个虚拟机加载，但是加载器不同，那这两个类也必定是不“相等”的。</p>
+<p>这里的“相等”，包括代表类的<code>Class</code>对象的<code>equals</code>方法，<code>isAssignableFrom()</code>和<code>isInstance()</code>方法的返回结果，也包括使用<code>instanceof</code>关键字判断对象所属关系等情况。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ClassLoaderTest</span> </span>&#123;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">		</span><br><span class="line">		ClassLoader classLoader = <span class="keyword">new</span> ClassLoader() &#123;</span><br><span class="line"></span><br><span class="line">			<span class="meta">@Override</span></span><br><span class="line">			<span class="keyword">public</span> Class&lt;?&gt; loadClass(String name) <span class="keyword">throws</span> ClassNotFoundException &#123;</span><br><span class="line">				</span><br><span class="line">				<span class="keyword">try</span> &#123;</span><br><span class="line">					String filename = </span><br><span class="line">                        name.substring(name.lastIndexOf(<span class="string">"."</span>) + <span class="number">1</span>) + <span class="string">".class"</span>;</span><br><span class="line">					InputStream stream = getClass().getResourceAsStream(filename);</span><br><span class="line">					<span class="keyword">if</span> (stream == <span class="keyword">null</span>) &#123;</span><br><span class="line">						<span class="keyword">return</span> <span class="keyword">super</span>.loadClass(name);</span><br><span class="line">					&#125;</span><br><span class="line">					</span><br><span class="line">					<span class="keyword">byte</span>[] bs = <span class="keyword">new</span> <span class="keyword">byte</span>[stream.available()];</span><br><span class="line">					stream.read(bs);</span><br><span class="line">					<span class="keyword">return</span> defineClass(name, bs, <span class="number">0</span>, bs.length);</span><br><span class="line">					</span><br><span class="line">				&#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">				</span><br><span class="line">					<span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException(name);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			</span><br><span class="line">		&#125;;</span><br><span class="line">		</span><br><span class="line">		Object object = </span><br><span class="line">            classLoader.loadClass(<span class="string">"oom_and_sof.ClassLoaderTest"</span>).newInstance();</span><br><span class="line">		</span><br><span class="line">		System.out.println(object.getClass());</span><br><span class="line">		</span><br><span class="line">		System.out.println(object <span class="keyword">instanceof</span> oom_and_sof.ClassLoaderTest);</span><br><span class="line">		</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行结果：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">class oom_and_sof.ClassLoaderTest</span><br><span class="line">false</span><br></pre></td></tr></table></figure>
+<h4 id="4-双亲委派机制"><a href="#4-双亲委派机制" class="headerlink" title="4. 双亲委派机制"></a>4. 双亲委派机制</h4><p>从<strong>Java开发者的角度</strong>看，类加载器还可以划分得更加细致一些，绝大部分<code>Java</code>程序都会使用到以下3中系统提供的类加载器。</p>
+<p>实际上，应用程序都是由这3种类加载器相互配合进行加载的，有必要的话还可以加入自己定义的类加载器。类加载器之间的层次关系，成为类加载器的双亲委派模型(Parents Delegation Model)。双亲委派模型要求除了顶层的启动类加载器之外，其余的类加载器都应当有自己的父类加载器。</p>
+<p><img src="/2019/02/22/深入理解Java虚拟机/classload.png" alt=""></p>
+<ul>
+<li>启动类加载器：负责将存放在<code>&lt;JAVA_HOME&gt;\lib</code>目录中的，或者被<code>-Xbootclasspath</code>参数所指定的路径中的，并且是虚拟机识别的类库加载到虚拟机内存中。启动类加载器无法被<code>Java</code>程序直接引用。</li>
+<li>扩展类加载器：负责加载<code>&lt;HAVA_HOME&gt;\lib\ext</code>目录中的类库，或者是被<code>java.ext.dirs</code>系统变量指定的路径中的所有类库，开发者可以直接使用扩展类加载器。</li>
+<li>应用程序类加载器：这个类加载器是<code>ClassLoader.getSystemClassLoader()</code>的返回值，所以也被叫做“系统类加载器“。它负责加载用户类路径上所指定的类库，开发者可以直接使用这个类加载器，如果应用程序中没有自定义过类加载器，一般情况下默认使用的就是这个类加载器。</li>
+</ul>
+<h5 id="双亲委派模型的工作过程"><a href="#双亲委派模型的工作过程" class="headerlink" title="双亲委派模型的工作过程"></a>双亲委派模型的工作过程</h5><p>如果一个雷加载器收到了类加载的请求，它首先不会自己尝试去加载这个类，而是把这个请求委派给父类加载器去完成，每一个层次的类加载器都是如此。因此，所有的类加载请求最终都会被传送到顶层的启动类加载器，只有当父类加载器反馈它自己无法完成这个加载请求的时候，子加载器才会尝试自己去完成加载请求。</p>
+<p>使用双亲委派模型来组织类加载器之间的关系，使得Java类随着它的类加载器一起具备了一种带有优先级的层次关系。例如，<code>java.lang.Object</code>，存放在<code>rt.jar</code>中，任何一个类加载器想要加载这个类，最终必须委派给模型顶层的启动类加载器，因此，用任何一个类加载器加载<code>Object</code>都是得到同一个类。</p>
+<p>加入现在我们自己编写一个<code>java.lang.Object</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> java.lang;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Object</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span>  <span class="title">print</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"defined Object"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>在另一个类调用它。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ObjTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Object object = <span class="keyword">new</span> Object();</span><br><span class="line">		object.print();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>程序会报错，抛出<code>java.lang.SecurityException</code>异常，因为<code>java.lang</code>是禁止使用的报名，实际上我们使用<code>Eclipse</code>创建这样一个报名的时候，已经提示不能创建，但是本例是强制创建的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">Exception in thread &quot;main&quot; java.lang.SecurityException: Prohibited package name: java.lang</span><br><span class="line">	at java.lang.ClassLoader.preDefineClass(ClassLoader.java:662)</span><br><span class="line">	at java.lang.ClassLoader.defineClass(ClassLoader.java:761)</span><br><span class="line">	at java.security.SecureClassLoader.defineClass(SecureClassLoader.java:142)</span><br><span class="line">	at java.net.URLClassLoader.defineClass(URLClassLoader.java:467)</span><br><span class="line">	at java.net.URLClassLoader.access$100(URLClassLoader.java:73)</span><br><span class="line">	at java.net.URLClassLoader$1.run(URLClassLoader.java:368)</span><br><span class="line">	at java.net.URLClassLoader$1.run(URLClassLoader.java:362)</span><br><span class="line">	at java.security.AccessController.doPrivileged(Native Method)</span><br><span class="line">	at java.net.URLClassLoader.findClass(URLClassLoader.java:361)</span><br><span class="line">	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)</span><br><span class="line">	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:331)</span><br><span class="line">	....</span><br></pre></td></tr></table></figure>
+<p>可见，双亲委派模型保证了Java类型体系的秩序，避免用户恶意的程序对虚拟机造成危害。</p>
+<p>### </p>
+
       
     </div>
     
@@ -347,6 +532,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/java/" rel="tag"># java</a>
+          
+            <a href="/tags/jvm/" rel="tag"># jvm</a>
+          
+        </div>
+      
 
       
       
@@ -365,6 +558,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/02/23/Java面试准备-高级篇/" rel="prev" title="Java面试准备(高级篇)">
+                Java面试准备(高级篇) <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -443,7 +640,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -456,7 +653,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -505,7 +702,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#Java虚拟机架构"><span class="nav-number">1.</span> <span class="nav-text">Java虚拟机架构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java运行时数据区"><span class="nav-number">2.</span> <span class="nav-text">Java运行时数据区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#OOM和SOF"><span class="nav-number">3.</span> <span class="nav-text">OOM和SOF</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#JVM和DVM"><span class="nav-number">4.</span> <span class="nav-text">JVM和DVM</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象内存分配和回收策略"><span class="nav-number">5.</span> <span class="nav-text">对象内存分配和回收策略</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反射机制"><span class="nav-number">6.</span> <span class="nav-text">反射机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#关于volatile关键字"><span class="nav-number">7.</span> <span class="nav-text">关于volatile关键字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#垃圾回收算法"><span class="nav-number">8.</span> <span class="nav-text">垃圾回收算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类的初始化过程"><span class="nav-number">9.</span> <span class="nav-text">类的初始化过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类加载过程"><span class="nav-number">10.</span> <span class="nav-text">类加载过程</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类文件结构"><span class="nav-number">11.</span> <span class="nav-text">类文件结构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内存模型"><span class="nav-number">12.</span> <span class="nav-text">内存模型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#判断对象已死"><span class="nav-number">13.</span> <span class="nav-text">判断对象已死</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#三种类加载器"><span class="nav-number">14.</span> <span class="nav-text">三种类加载器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#双亲委派机制"><span class="nav-number">15.</span> <span class="nav-text">双亲委派机制</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#自动内存管理机制"><span class="nav-number">1.</span> <span class="nav-text">自动内存管理机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java内存区域与内存溢出异常"><span class="nav-number">1.1.</span> <span class="nav-text">Java内存区域与内存溢出异常</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-Java运行时数据区"><span class="nav-number">1.1.1.</span> <span class="nav-text">1. Java运行时数据区</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-对象的创建"><span class="nav-number">1.1.2.</span> <span class="nav-text">2. 对象的创建</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#判断对象已死"><span class="nav-number">1.2.</span> <span class="nav-text">判断对象已死</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-引用计数法"><span class="nav-number">1.2.1.</span> <span class="nav-text">1. 引用计数法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-可达性分析算法"><span class="nav-number">1.2.2.</span> <span class="nav-text">2. 可达性分析算法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-Java的4种引用类型"><span class="nav-number">1.2.3.</span> <span class="nav-text">3. Java的4种引用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-两次标记宣告对象消亡"><span class="nav-number">1.2.4.</span> <span class="nav-text">4. 两次标记宣告对象消亡</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集算法"><span class="nav-number">1.3.</span> <span class="nav-text">垃圾收集算法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#垃圾收集器"><span class="nav-number">1.4.</span> <span class="nav-text">垃圾收集器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#对象内存分配和回收策略"><span class="nav-number">1.5.</span> <span class="nav-text">对象内存分配和回收策略</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#虚拟机执行子系统"><span class="nav-number">2.</span> <span class="nav-text">虚拟机执行子系统</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#类文件结构"><span class="nav-number">2.1.</span> <span class="nav-text">类文件结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Magic-number"><span class="nav-number">2.1.1.</span> <span class="nav-text">Magic number</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#常量池"><span class="nav-number">2.1.2.</span> <span class="nav-text">常量池</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#访问标志"><span class="nav-number">2.1.3.</span> <span class="nav-text">访问标志</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#类索引、父类索引和接口索引集合"><span class="nav-number">2.1.4.</span> <span class="nav-text">类索引、父类索引和接口索引集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字段表集合"><span class="nav-number">2.1.5.</span> <span class="nav-text">字段表集合</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#方法表集合"><span class="nav-number">2.1.6.</span> <span class="nav-text">方法表集合</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#虚拟机类加载机制"><span class="nav-number">2.2.</span> <span class="nav-text">虚拟机类加载机制</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-类加载的时机"><span class="nav-number">2.2.1.</span> <span class="nav-text">1. 类加载的时机</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-类加载的过程"><span class="nav-number">2.2.2.</span> <span class="nav-text">2. 类加载的过程</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#加载"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">加载</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#验证"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">验证</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#准备"><span class="nav-number">2.2.2.3.</span> <span class="nav-text">准备</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#解析"><span class="nav-number">2.2.2.4.</span> <span class="nav-text">解析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#初始化"><span class="nav-number">2.2.2.5.</span> <span class="nav-text">初始化</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-类与类加载器"><span class="nav-number">2.2.3.</span> <span class="nav-text">3. 类与类加载器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-双亲委派机制"><span class="nav-number">2.2.4.</span> <span class="nav-text">4. 双亲委派机制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#双亲委派模型的工作过程"><span class="nav-number">2.2.4.1.</span> <span class="nav-text">双亲委派模型的工作过程</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
 
           </div>

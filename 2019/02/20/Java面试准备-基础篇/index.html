@@ -88,7 +88,7 @@
 <meta property="og:description" content="本篇文章收集整理一些Java常考的基础问题，仅为准备面试之用。 基本类型和类对象的交换Java传参的有两种方式，一种是值传递，另一种是引用传递。而Java的引用传递不像C++的引用传递那样，C++的引用传递可以用于交换两个基本类型的变量值，因为C++的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而Java的引用，实际上是声明在栈上的变量对堆上的对象">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://kenetgit.top/2019/02/20/Java面试准备-基础篇/exception.png">
-<meta property="og:updated_time" content="2019-02-22T15:47:34.011Z">
+<meta property="og:updated_time" content="2019-02-23T03:24:26.108Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java面试准备(基础篇)">
 <meta name="twitter:description" content="本篇文章收集整理一些Java常考的基础问题，仅为准备面试之用。 基本类型和类对象的交换Java传参的有两种方式，一种是值传递，另一种是引用传递。而Java的引用传递不像C++的引用传递那样，C++的引用传递可以用于交换两个基本类型的变量值，因为C++的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而Java的引用，实际上是声明在栈上的变量对堆上的对象">
@@ -326,8 +326,8 @@
         <p>本篇文章收集整理一些<code>Java</code>常考的基础问题，仅为准备面试之用。</p>
 <h4 id="基本类型和类对象的交换"><a href="#基本类型和类对象的交换" class="headerlink" title="基本类型和类对象的交换"></a>基本类型和类对象的交换</h4><p><code>Java</code>传参的有两种方式，一种是值传递，另一种是引用传递。而<code>Java</code>的引用传递不像<code>C++</code>的引用传递那样，<code>C++</code>的引用传递可以用于交换两个基本类型的变量值，因为<code>C++</code>的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而<code>Java</code>的引用，实际上是声明在栈上的变量对堆上的对象的一个引用，因此引用变量不是直接对内存地址进行操作，但是通过引用变量可以操作堆上的对象。</p>
 <p>基本类型值交换，通过将基本类型转换成其对应的包装器对象（传参时自动装箱），然后再通过类的反射机制，获取包装器对象的数据域，直接修改数据域，达到值交换的目的。</p>
-<p>类对象的交换，直接交换引用变量是不会得到预期结果的，因为交换引用变量改变的只是栈上的变量，当函数运行完，栈变量销毁。改变类对象的方法之一是用一个外部类对其包装，从而通过这样的包装类进行交换。其二，通过逐一的交换对象数据域的属性值也能达到目的。</p>
-<h4 id="装箱和拆箱"><a href="#装箱和拆箱" class="headerlink" title="装箱和拆箱"></a>装箱和拆箱</h4><p>首尔要说一下对象包装器，像<code>int</code>这样的基本类型转换为对象，所有的基本类型都有一个与之对应的类，就是包装器。例如，<code>int</code>对应<code>Integer</code>。其中，自动装箱是指基本类型到包装器的转换是自动转换的，就像是把一个值装到包装器中，所以称之为装箱。而自动拆箱与自动装箱相对，也就是从包装器对象转换为基本类型。值得举一个例子，<code>ArrayList&lt;Integer&gt;</code> 。注意，包装器的内容是不可变的，是<code>final</code>的。</p>
+<p>类对象的交换，直接交换引用变量是不会得到预期结果的，因为交换引用变量改变的只是栈上的变量，当函数运行完，栈变量销毁。改变类对象的方法之一是用一个外部类对其包装，从而通过这样的包装类进行交换。其二，通过逐一地交换对象数据域的属性值也能达到目的。</p>
+<h4 id="装箱和拆箱"><a href="#装箱和拆箱" class="headerlink" title="装箱和拆箱"></a>装箱和拆箱</h4><p>首先要说一下对象包装器，像<code>int</code>这样的基本类型转换为对象，所有的基本类型都有一个与之对应的类，就是包装器。例如，<code>int</code>对应<code>Integer</code>。其中，自动装箱是指基本类型到包装器的转换是自动转换的，就像是把一个值装到包装器中，所以称之为装箱。而自动拆箱与自动装箱相对，也就是从包装器对象转换为基本类型。值得举一个例子，<code>ArrayList&lt;Integer&gt;</code> 。注意，包装器的内容是不可变的，是<code>final</code>的。</p>
 <h4 id="对象构造、析构与初始化"><a href="#对象构造、析构与初始化" class="headerlink" title="对象构造、析构与初始化"></a>对象构造、析构与初始化</h4><p>在<code>Java</code>中，对象构造器内可以调用另一个重载的对象构造器；当使用初始化块对对象的数据域进行初始化时，调用构造器就会执行这些初始化块。而静态初始化块，则是当该类第一个被实例化时执行，静态初始化块只能用于对类的静态成员变量初始化。</p>
 <p>初始化对象时，可以使用<code>初始化代码块</code>，在创建每个对象实例的时候，初始化代码块就会被执行；使用<code>静态初始化代码块</code>，用于对类中的静态域进行初始化。</p>
 <p><code>Java</code>中没有对象析构，<code>java</code>有自己的垃圾回收机制，不需要开发者手动回收，因此不支持析构器；但是<code>Java</code>提供了<code>finalize()</code>方法，当需要对某些资源进行手动回收时，<code>finalize()</code>方法将在垃圾回收器清除对象前被调用。</p>
@@ -362,6 +362,7 @@
 </ul>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">ObjectInputStream in = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(<span class="string">"data.obj"</span>));</span><br><span class="line">Employee emp5 = (Employee) in.readObject();</span><br><span class="line"></span><br><span class="line">261: invokevirtual  #118   </span><br><span class="line"><span class="comment">// Method java/io/ObjectInputStream.readObject:()Ljava/lang/Object;</span></span><br></pre></td></tr></table></figure>
 <p>我们从上面的字节码片段可以看到，除了第1个方法，其他4个方法全都转变为<code>invokevirtual</code>(创建对象的直接方法)，第一个方法转变为两个调用，<code>new</code>和i<code>nvokespecial</code>(构造函数调用)</p>
+<h4 id="封装"><a href="#封装" class="headerlink" title="封装"></a>封装</h4><p>封装隐藏了对象内部结构和行为，通过提供一些访问方法来改变对象内部的数据。<code>Java</code>提供了3中访问修饰符，<code>public</code>、<code>private</code>和<code>protected</code>，每一种访问修饰符给位于同一包或者不同包下的类提供了不同的访问权限。此外，封装提供了代码重用性。</p>
 <h4 id="继承与类型转换"><a href="#继承与类型转换" class="headerlink" title="继承与类型转换"></a>继承与类型转换</h4><p><code>super</code>关键字理解为指向<code>直接超类</code>的一个指针，通过<code>super</code>可以引用父类的方法，通过<code>super</code>可以调用父类的构造函数。</p>
 <h4 id="多态与动态绑定"><a href="#多态与动态绑定" class="headerlink" title="多态与动态绑定"></a>多态与动态绑定</h4><p>多态，可以理解为使用父类的指针来调用不同子类中实现的方法。</p>
 <p>多态的3个条件：</p>
@@ -372,7 +373,8 @@
 </ul>
 <p>静态绑定，即编译器在编译阶段就能确定调用哪些方法。相对的，动态绑定，即当程序运行期间才能确定具体该调用哪个方法，例如，在子类中调用某方法，如果子类有该方法就直接调用，如果没有，就到超类中查找；为此<code>JVM</code>为每个类创建了一个方法表，通过方法的签名和参数列表对应实际应该调用的方法，这样在动态绑定时通过查表、匹配，就能确定调用哪个方法。</p>
 <p>多态的方法调用，是静态绑定的。编译器通过匹配被调用方法的属性，匹配候选的调用方法，最终确定调用哪个方法，期间涉及“重载解析”。</p>
-<h4 id="抽象类与接口"><a href="#抽象类与接口" class="headerlink" title="抽象类与接口"></a>抽象类与接口</h4><p>含有一个或多个抽象方法的类称为抽象类；子类继承抽象父类，必须继承实现父类的全部抽象方法，否则子类应声明为抽象类。抽象类是一种模板设计思想；抽象类可以继承多个接口，并且不需要全部实现接口的方法（或者一个都不实现），把实现的任务留给继承抽象类的子类。</p>
+<h4 id="抽象类与接口"><a href="#抽象类与接口" class="headerlink" title="抽象类与接口"></a>抽象类与接口</h4><p>抽象技术的主要目的是把类的行为或功能，与具体的实现细节分离。抽象与封装是互补的，一方面，抽象关注对象的行为，而封装关注对象行为的具体细节。</p>
+<p>含有一个或多个抽象方法的类称为抽象类；子类继承抽象父类，必须继承实现父类的全部抽象方法，否则子类应声明为抽象类。抽象类是一种模板设计思想；抽象类可以继承多个接口，并且不需要全部实现接口的方法（或者一个都不实现），把实现的任务留给继承抽象类的子类。</p>
 <p>接口不能实例化，接口中的方法默认是<code>public</code>和<code>abstract</code>的；接口不能包含实例域和静态方法，但是可以有常量，接口中的常量默认是<code>public static final</code>的，这一点与接口不能实例化是一致的。</p>
 <p>接口与抽象类的比较：每个类只能继承一个抽象类，但是一个类可以实现多个接口，<code>java</code>是不支持多继承的；</p>
 <p>解决多接口的二义性：第一，超类优先；第二，如果实现的多个接口间存在同签名的默认方法冲突，<code>java</code>编译器会报错，让开发者自行解决这个二义性，开发者可以使用<code>InterfaceName.super</code>来选择要调用哪个接口的方法。</p>
@@ -386,15 +388,18 @@
 </blockquote>
 <p>该方法的注解中提到<code>hashCode</code>方法是为了提供对（集合框架中）类如 <code>hash tables</code>的支持，因为使用哈希存储的时候，就会调用对象的<code>hashCode</code>方法来计算对象所映射的<code>桶</code>。（<code>HashMap</code>、<code>HashSet</code>和<code>Hashtable</code>）</p>
 <p>我将会在另一篇学习笔记中，深入讨论<code>Obecjt</code>的方法，其中将讨论重写<code>equals</code>和<code>hashCode</code>。</p>
-<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>所有的异常都是由<code>Throwable</code>继承而来的，且在下一层分解为<code>Error</code>和<code>Exception</code>。<code>Error</code>类层次结构描述了<code>Java</code>运行时系统的内部错误和资源耗尽错误。应用程序一般不应该抛出这种错误。</p>
+<h4 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h4><p>所有的异常都是由<code>Throwable</code>继承而来的，且在下一层分解为<code>Error</code>和<code>Exception</code>。<code>Error</code>类层次结构描述了<code>Java</code>运行时系统的内部错误和资源耗尽错误，不期望用户程序捕获处理这类错误。而<code>Exception</code>用于用户程序可以捕获的异常。</p>
 <p><img src="/2019/02/20/Java面试准备-基础篇/exception.png" alt=""></p>
 <ol>
-<li><p>非受查异常： 派生于<code>Error</code>类或 <code>RuntimeException</code>类的所有异常。这些异常只有在运行期间才被检查出来。</p>
+<li><p>非受查异常： 派生于<code>Error</code>类或 <code>RuntimeException</code>类的所有异常。这些异常只有在运行期间才被检查出来。<code>Error</code>代表编译时期和系统错误，由<code>JVM</code>生成并抛出，包括动态链接失败、虚拟机错误等，用户程序对其不做处理。<code>RuntimeException</code>，如除数为0或数组下标越界等，如果显式地声明处理这一类异常，反而会导致程序的可读性下降，所以这类异常由<code>系统</code>检测并将它们交给默认的异常处理程序，当然我们也是可以在代码中显示地捕获这些异常的。</p>
 </li>
-<li><p>受查异常：其他异常，如<code>IOException</code>。<code>IO</code>操作存在异常的可能，所以<code>Java</code>为这类操作声明了检查异常，即要求调用者出来该方法可能抛出的异常。编译器会检查是否为所有的受查异常提供了错误处理器。一个方法必须声明所有可能抛出的<strong>受查异常</strong>，或者捕获处理这些异常。</p>
+<li><p>受查异常：其他异常，如<code>IOException</code>。<code>IO</code>操作存在异常的可能，所以<code>Java</code>为这类操作声明了检查异常，即要求调用者出来该方法可能抛出的异常。编译器会检查是否为所有的受查异常提供了错误处理器，如果用户程序没有处理这些受查异常，那编译就会发生错误。一个方法必须声明所有可能抛出的<strong>受查异常</strong>，或者捕获处理这些异常。</p>
 </li>
 <li><p>异常处理</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span> &#123;&#125; <span class="keyword">catch</span>&#123;&#125; <span class="keyword">finally</span>&#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>第一种是手动处理，使用<code>try...catch</code>块来捕获，另一种是声明抛出该类异常。</p>
+<p>同时，我们也谈谈<code>throw</code>和<code>throws</code>的区别：<code>throw</code>用于方法内部，由用户编码手动抛出，<code>throws</code>用于方法声明上；<code>throw</code>后跟异常对象，<code>throws</code>后跟异常类型；<code>throw</code>后只能跟一个异常对象，<code>throws</code>可以一次声明多个异常类型。</p>
+<p>异常处理完成以后，<code>Exception</code>对象会在下一个垃圾回收过程中被回收。</p>
+<p><code>finally</code>块：区别一下<code>finally</code>和<code>finalize</code>，前者一般用在异常处理中配置<code>try...catch</code>块使用，后者是<code>Object</code>类的一个<code>protected</code>方法；无论是否抛出异常，<code>finally</code>代码块都会被执行，它主要是用来释放应用占用的资源，而<code>finalize</code>方法用在对象被垃圾回收之前由虚拟机来调用。</p>
 </li>
 </ol>
 <h4 id="内部类机制"><a href="#内部类机制" class="headerlink" title="内部类机制"></a>内部类机制</h4><p>定义在一个类内部的类就称为内部类，内部类对同一个包中的其他类是不可见的。内部类可以访问自身数据，也可以访问创建它的外围类对象的数据域。内部类对象有一个对外围类对象的隐式引用，这个引用在内部类的定义中是不可见的，因为这是由编译器完成的。</p>
@@ -435,7 +440,7 @@
 <blockquote>
 <p>其他更为深入的介绍可以参考这篇博文：<a href="https://www.cnblogs.com/dolphin0520/p/3778589.html" target="_blank" rel="noopener">探秘Java中的String、StringBuilder以及StringBuffer</a></p>
 </blockquote>
-<h4 id="Java的语法糖"><a href="#Java的语法糖" class="headerlink" title="Java的语法糖"></a>Java的语法糖</h4><blockquote>
+<h4 id="反射机制"><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h4><h4 id="Java的语法糖"><a href="#Java的语法糖" class="headerlink" title="Java的语法糖"></a>Java的语法糖</h4><blockquote>
 <p>参考：<a href="https://www.cnblogs.com/qingshanli/p/9375040.html" target="_blank" rel="noopener">浅析java中的语法糖</a></p>
 </blockquote>
 <h4 id="NIO基础"><a href="#NIO基础" class="headerlink" title="NIO基础"></a>NIO基础</h4><p><code>NIO</code>即<code>New IO</code>，这个库是在<code>JDK1.4</code>中才引入的。NIO和IO有相同的作用和目的，但实现方式不同，NIO主要用到的是块，所以NIO的效率要比IO高很多。在Java API中提供了两套NIO，一套是针对标准输入输出NIO，另一套就是网络编程NIO。</p>
@@ -446,6 +451,7 @@
 <blockquote>
 <p>参考：<a href="https://www.cnblogs.com/haitaofeiyang/p/7696013.html" target="_blank" rel="noopener">java native方法及JNI实例</a></p>
 </blockquote>
+<h4 id="applet"><a href="#applet" class="headerlink" title="applet"></a>applet</h4><p>这方面的知识可以说是过时的，但是出于对<code>java</code>基础知识的完整性考虑，决定在此简单介绍一下<code>applet</code>。<code>java applet</code>是能够被包含在<code>HTML</code>页面并且能被启动了<code>java</code>客户端浏览器执行的程序。<code>applet</code>主要用来创建动态交互的web应用程序，常用在<code>JSP</code>模板中。使用<code>applet</code>有一些限制，这些限制主要是出于安全考虑，例如<code>applet</code>不能够载入类库或者定义本地方法等。</p>
 <hr>
 <p>关于Java基础知识会持续更新~~</p>
 <hr>
@@ -499,8 +505,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2019/02/22/深入理解Java虚拟机/" rel="prev" title="深入理解Java虚拟机">
-                深入理解Java虚拟机 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/02/22/深入理解Java虚拟机/" rel="prev" title="深入理解Java虚拟机(上)">
+                深入理解Java虚拟机(上) <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -580,7 +586,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -593,7 +599,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -642,7 +648,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本类型和类对象的交换"><span class="nav-number">1.</span> <span class="nav-text">基本类型和类对象的交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#装箱和拆箱"><span class="nav-number">2.</span> <span class="nav-text">装箱和拆箱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象构造、析构与初始化"><span class="nav-number">3.</span> <span class="nav-text">对象构造、析构与初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深复制和浅复制"><span class="nav-number">4.</span> <span class="nav-text">深复制和浅复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建对象的方式"><span class="nav-number">5.</span> <span class="nav-text">创建对象的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承与类型转换"><span class="nav-number">6.</span> <span class="nav-text">继承与类型转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态与动态绑定"><span class="nav-number">7.</span> <span class="nav-text">多态与动态绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抽象类与接口"><span class="nav-number">8.</span> <span class="nav-text">抽象类与接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object"><span class="nav-number">9.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常"><span class="nav-number">10.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内部类机制"><span class="nav-number">11.</span> <span class="nav-text">内部类机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java四种引用类型"><span class="nav-number">12.</span> <span class="nav-text">Java四种引用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#泛型和泛型擦除"><span class="nav-number">13.</span> <span class="nav-text">泛型和泛型擦除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#equals-和"><span class="nav-number">14.</span> <span class="nav-text">equals 和 ==</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String系列"><span class="nav-number">15.</span> <span class="nav-text">String系列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java的语法糖"><span class="nav-number">16.</span> <span class="nav-text">Java的语法糖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NIO基础"><span class="nav-number">17.</span> <span class="nav-text">NIO基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#native方法和JNI"><span class="nav-number">18.</span> <span class="nav-text">native方法和JNI</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本类型和类对象的交换"><span class="nav-number">1.</span> <span class="nav-text">基本类型和类对象的交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#装箱和拆箱"><span class="nav-number">2.</span> <span class="nav-text">装箱和拆箱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象构造、析构与初始化"><span class="nav-number">3.</span> <span class="nav-text">对象构造、析构与初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深复制和浅复制"><span class="nav-number">4.</span> <span class="nav-text">深复制和浅复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建对象的方式"><span class="nav-number">5.</span> <span class="nav-text">创建对象的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#封装"><span class="nav-number">6.</span> <span class="nav-text">封装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承与类型转换"><span class="nav-number">7.</span> <span class="nav-text">继承与类型转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态与动态绑定"><span class="nav-number">8.</span> <span class="nav-text">多态与动态绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抽象类与接口"><span class="nav-number">9.</span> <span class="nav-text">抽象类与接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object"><span class="nav-number">10.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常"><span class="nav-number">11.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内部类机制"><span class="nav-number">12.</span> <span class="nav-text">内部类机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java四种引用类型"><span class="nav-number">13.</span> <span class="nav-text">Java四种引用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#泛型和泛型擦除"><span class="nav-number">14.</span> <span class="nav-text">泛型和泛型擦除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#equals-和"><span class="nav-number">15.</span> <span class="nav-text">equals 和 ==</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String系列"><span class="nav-number">16.</span> <span class="nav-text">String系列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反射机制"><span class="nav-number">17.</span> <span class="nav-text">反射机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java的语法糖"><span class="nav-number">18.</span> <span class="nav-text">Java的语法糖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NIO基础"><span class="nav-number">19.</span> <span class="nav-text">NIO基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#native方法和JNI"><span class="nav-number">20.</span> <span class="nav-text">native方法和JNI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#applet"><span class="nav-number">21.</span> <span class="nav-text">applet</span></a></li></ol></div>
             
 
           </div>

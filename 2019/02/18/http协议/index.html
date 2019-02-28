@@ -96,7 +96,7 @@
 <meta property="og:image" content="http://kenetgit.top/2019/02/18/http协议/gram.png">
 <meta property="og:image" content="http://kenetgit.top/2019/02/18/http协议/header.png">
 <meta property="og:image" content="http://kenetgit.top/2019/02/18/http协议/header1.png">
-<meta property="og:updated_time" content="2019-02-17T16:50:36.341Z">
+<meta property="og:updated_time" content="2019-02-23T03:04:46.131Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="http协议">
 <meta name="twitter:description" content="概念TCP/IP与HTTP本文试图讲明白HTTP的基础知识，因此让我们从TCP/IP与HTTP的联系入手，先了解TCP/IP的一些基础概念。 首先，关于TCP/IP协议族，HTTP是其子集，TCP/IP被认为是互联网相关的各类协议族的总称。在TCP/IP协议中采用协议分层的模式：应用层、传输层、网络层和数据链路层。在Web开发中，需要了解各层的主要内容有：- -  应用层：HTTP协议，FTP协议">
@@ -377,6 +377,10 @@
 <li>DELETE：用来删除文件，DELETE方法按请求的URI删除指定的资源。注意，<code>HTTP1.1</code>的<code>DELETE</code>方法自身不带验证机制，任何人都可以上传文件，存在安全性问题。</li>
 <li>OPTIONS：用来查询针对请求URI指定的资源支持的方法，即服务端支持客户端使用哪些HTTP方法访问特定的资源。</li>
 </ul>
+<hr>
+<p>GET方法会把<code>key-value</code>追加在请求的<code>URL</code>之后。因为<code>URL</code>对长度有限制，所以使用<code>GET</code>方法限制了客户端方的请求参数的数目，并且以这种方式发起请求的话，请求中的参数值是可见的，敏感信息不能以这种方式发起请求。</p>
+<p>POST方法则会把请求参数放在请求体中（请求体被封装在请求报文中并完成了编码），客服了长度的限制以及信息的不安全性（请求体对客户端是不可见的）。</p>
+<hr>
 <p>响应报文：由协议版本，状态码，解释状态码的短语，可选的首部字段以及实体主体构成。其中，响应首部字段与主体之间有一个空行。</p>
 <p><img src="http_res.png" alt=""></p>
 <h4 id="无状态的HTTP"><a href="#无状态的HTTP" class="headerlink" title="无状态的HTTP"></a>无状态的HTTP</h4><p>为什么说HTTP是无状态的协议呢？有人解释说，HTTP协议自身（注意这个词）不对请求和响应之间的通信状态进行保存，也就是在HTTP通信过程，HTTP协议本身不会对请求或响应做任何的<strong>持久化处理</strong>。因此，有一个新的请求就有一个新的响应，即使是重复的请求。但是，接触过web开发的学习者都知道，很多web业务需要保存用户的一些状态，比如用户的登录状态，用户在退出前停留在哪个页面等。</p>
@@ -799,7 +803,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">20</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -812,7 +816,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">11</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
