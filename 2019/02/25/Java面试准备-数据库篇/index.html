@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="MySQL原理2、MySQL中myisam与innodb的区别，至少5点  InnoDB支持事务，而MyISAM不支持事务 InnoDB支持行级锁，而MyISAM支持表级锁  InnoDB支持MVCC（Multi-Version Concurrency Control，多版本并发控制）, 而MyISAM不支持  InnoDB支持外键，而MyISAM不支持  InnoDB不支持全文索引，而MyISA">
+<meta name="description" content="MySql数据类型数字类型MySQL的数字类型有以下8种，分别是int， tinyint，smallint， mediumint， bigint，float(m,d)，double(m,d)和decimal(m,d)。 其中xxxint都分为有符号和无符号两种，重点是要了解每种整数类型的取值范围。float(m,d)中，m表示显示长度，d表示小数位数，这两个参数是可选的，默认下为m=10; d=2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java面试准备(数据库篇)">
+<meta property="og:title" content="MySQL数据库(基础篇)">
 <meta property="og:url" content="http://kenetgit.top/2019/02/25/Java面试准备-数据库篇/index.html">
 <meta property="og:site_name" content="KenetGit&#39;s blog">
-<meta property="og:description" content="MySQL原理2、MySQL中myisam与innodb的区别，至少5点  InnoDB支持事务，而MyISAM不支持事务 InnoDB支持行级锁，而MyISAM支持表级锁  InnoDB支持MVCC（Multi-Version Concurrency Control，多版本并发控制）, 而MyISAM不支持  InnoDB支持外键，而MyISAM不支持  InnoDB不支持全文索引，而MyISA">
+<meta property="og:description" content="MySql数据类型数字类型MySQL的数字类型有以下8种，分别是int， tinyint，smallint， mediumint， bigint，float(m,d)，double(m,d)和decimal(m,d)。 其中xxxint都分为有符号和无符号两种，重点是要了解每种整数类型的取值范围。float(m,d)中，m表示显示长度，d表示小数位数，这两个参数是可选的，默认下为m=10; d=2">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-26T14:52:08.636Z">
+<meta property="og:updated_time" content="2019-02-28T15:04:09.949Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java面试准备(数据库篇)">
-<meta name="twitter:description" content="MySQL原理2、MySQL中myisam与innodb的区别，至少5点  InnoDB支持事务，而MyISAM不支持事务 InnoDB支持行级锁，而MyISAM支持表级锁  InnoDB支持MVCC（Multi-Version Concurrency Control，多版本并发控制）, 而MyISAM不支持  InnoDB支持外键，而MyISAM不支持  InnoDB不支持全文索引，而MyISA">
+<meta name="twitter:title" content="MySQL数据库(基础篇)">
+<meta name="twitter:description" content="MySql数据类型数字类型MySQL的数字类型有以下8种，分别是int， tinyint，smallint， mediumint， bigint，float(m,d)，double(m,d)和decimal(m,d)。 其中xxxint都分为有符号和无符号两种，重点是要了解每种整数类型的取值范围。float(m,d)中，m表示显示长度，d表示小数位数，这两个参数是可选的，默认下为m=10; d=2">
 
 
 
@@ -125,7 +125,7 @@
 
 
 
-  <title>Java面试准备(数据库篇) | KenetGit's blog</title>
+  <title>MySQL数据库(基础篇) | KenetGit's blog</title>
   
 
 
@@ -270,7 +270,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java面试准备(数据库篇)</h1>
+          <h1 class="post-title" itemprop="name headline">MySQL数据库(基础篇)</h1>
         
 
         <div class="post-meta">
@@ -320,30 +320,7 @@
       
 
       
-        <h2 id="MySQL原理"><a href="#MySQL原理" class="headerlink" title="MySQL原理"></a>MySQL原理</h2><p>2、MySQL中myisam与innodb的区别，至少5点</p>
-<ul>
-<li>InnoDB支持事务，而MyISAM不支持事务</li>
-<li><p>InnoDB支持行级锁，而MyISAM支持表级锁</p>
-</li>
-<li><p>InnoDB支持MVCC（Multi-Version Concurrency Control，多版本并发控制）, 而MyISAM不支持</p>
-</li>
-<li><p>InnoDB支持外键，而MyISAM不支持</p>
-</li>
-<li><p>InnoDB不支持全文索引，而MyISAM支持。</p>
-</li>
-</ul>
-<p>(1)、varchar与char的区别<br>char是一种固定长度的类型，varchar则是一种可变长度的类型<br>(2)、varchar(50)中50的涵义<br>最多存放50个字符，varchar(50)和(200)存储hello所占空间一样，但后者在排序时会消耗更多内存，因为order by col采用fixed_length计算col长度(memory引擎也一样)<br>(3)、int（20）中20的涵义<br>是指显示字符的长度<br>但要加参数的，最大为255，比如它是记录行数的id,插入10笔资料，它就显示00000000001 ~~~00000000010，当字符的位数超过11,它也只显示11位，如果你没有加那个让它未满11位就前面加0的参数，它不会在前面加0<br>20表示最大显示宽度为20，但仍占4字节存储，存储范围不变；<br>(4)、mysql为什么这么设计<br>对大多数应用没有意义，只是规定一些工具用来显示字符的个数；int(1)和int(20)存储和计算均一样；</p>
-<p>1.mysql优化</p>
-<p>2.mysql常用的引擎有哪些，说说你对InnoDB的了解</p>
-<p>3.mysql瓶颈</p>
-<p>4.事务特性</p>
-<p>5.事务的隔离级别</p>
-<p>6.sql查询每门课程成绩都大于80分的学生姓名（表table，字段sname，subject，score）</p>
-<p>select sname from tabel group by sname having min(score)&gt;80;</p>
-<p>7.mysql执行计划</p>
-<p>8.字段A、B、C组成联合索引，条件where A=？ AND B=? 是否生效，where B=？ AND C=?是否生效</p>
-<p>9.查询一张表的两条记录，假设由字段A和B和可确定唯一一列，将这两条记录用一列展示出来</p>
-<h3 id="MySql数据类型"><a href="#MySql数据类型" class="headerlink" title="MySql数据类型"></a>MySql数据类型</h3><h4 id="数字类型"><a href="#数字类型" class="headerlink" title="数字类型"></a>数字类型</h4><p><code>MySQL</code>的数字类型有以下8种，分别是<code>int</code>， <code>tinyint</code>，<code>smallint</code>， <code>mediumint</code>， <code>bigint</code>，<code>float(m,d)</code>，<code>double(m,d)</code>和<code>decimal(m,d)</code>。</p>
+        <h3 id="MySql数据类型"><a href="#MySql数据类型" class="headerlink" title="MySql数据类型"></a>MySql数据类型</h3><h4 id="数字类型"><a href="#数字类型" class="headerlink" title="数字类型"></a>数字类型</h4><p><code>MySQL</code>的数字类型有以下8种，分别是<code>int</code>， <code>tinyint</code>，<code>smallint</code>， <code>mediumint</code>， <code>bigint</code>，<code>float(m,d)</code>，<code>double(m,d)</code>和<code>decimal(m,d)</code>。</p>
 <p>其中<code>xxxint</code>都分为有符号和无符号两种，重点是要了解每种整数类型的取值范围。<code>float(m,d)</code>中，<code>m</code>表示显示长度，<code>d</code>表示小数位数，这两个参数是可选的，默认下为<code>m=10; d=2</code>。<code>float</code>小数精度是24位。</p>
 <p>类似的，<code>double(m,d)</code>默认中<code>m=16; d=4</code>，而小数精度可达53位，<code>DOUBLE</code>与<code>REAL</code>同义。</p>
 <p><code>decimal(m,d)</code>表示非压缩的无符号浮点数，与<code>NUMERIC</code>同义。</p>
@@ -360,7 +337,7 @@
 <li><strong>VARCHAR(M)</strong> ：长度不定的字符串，因此最大长度不能超过65535。比如：CHAR(25)。在创建VARCHAR字段时，必须定义长度。参数<code>M</code>用于格式化显示。</li>
 <li><strong>BLOB or TEXT</strong>： 最大长度为65535个字符的字段。BLOB是Binary Large Objects（二进制大型对象）的缩写，专用于保存大量的二进制数据，比如图片或其他类型的文件。TEXT 类型的文件也能保存大型数据。这两者的区别在于存储数据的排序和对比方面，BLOB类型数据是大小写敏感的，而TEXT类型数据则不是。另外，不能指定它们的长度。</li>
 </ul>
-<h2 id="MySql应用"><a href="#MySql应用" class="headerlink" title="MySql应用"></a>MySql应用</h2><h3 id="基础操作"><a href="#基础操作" class="headerlink" title="基础操作"></a>基础操作</h3><h4 id="数据库管理"><a href="#数据库管理" class="headerlink" title="数据库管理"></a>数据库管理</h4><ul>
+<h3 id="MySQL-基本操作"><a href="#MySQL-基本操作" class="headerlink" title="MySQL 基本操作"></a>MySQL 基本操作</h3><h4 id="数据库管理"><a href="#数据库管理" class="headerlink" title="数据库管理"></a>数据库管理</h4><ul>
 <li>创建数据库</li>
 </ul>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">root@localhost:campus_service&gt;create database test;</span><br><span class="line">Query OK, 1 row affected (0.00 sec)</span><br></pre></td></tr></table></figure>
@@ -469,9 +446,9 @@
 <td>未在一对方括号之间的字符</td>
 </tr>
 <tr>
-<td>`p1</td>
-<td>p2</td>
-<td>p3`</td>
+<td>“p1\</td>
+<td>p2\</td>
+<td>p3”</td>
 <td>交替匹配模式1、模式2或模式3</td>
 </tr>
 <tr>
@@ -546,7 +523,9 @@
 <li>从查询结果中消除重复记录，使用DISTINCT 和 SELECT 语句来查找表中的重复记录。或者，另一种办法是添加 GROUP BY 子句，命名选择的列。消除重复记录并只选择指定列中的唯一值组合。</li>
 <li>使用表替换去除重复记录，将查询得到的无重复的结果组成的临时表，替换掉存在重复记录的表，从而去除表中的重复记录。</li>
 </ul>
-<p>#### </p>
+<hr>
+<p>本文是MySQL的基础知识，已更新完……..</p>
+<hr>
 
       
     </div>
@@ -581,8 +560,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/02/23/Java面试准备-高级篇/" rel="next" title="Java面试准备(高级篇)">
-                <i class="fa fa-chevron-left"></i> Java面试准备(高级篇)
+              <a href="/2019/02/23/Java面试准备-高级篇/" rel="next" title="Java高级篇">
+                <i class="fa fa-chevron-left"></i> Java高级篇
               </a>
             
           </div>
@@ -734,7 +713,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#MySQL原理"><span class="nav-number">1.</span> <span class="nav-text">MySQL原理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySql数据类型"><span class="nav-number">1.1.</span> <span class="nav-text">MySql数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数字类型"><span class="nav-number">1.1.1.</span> <span class="nav-text">数字类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#日期与时间类型"><span class="nav-number">1.1.2.</span> <span class="nav-text">日期与时间类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字符串类型"><span class="nav-number">1.1.3.</span> <span class="nav-text">字符串类型</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#MySql应用"><span class="nav-number">2.</span> <span class="nav-text">MySql应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基础操作"><span class="nav-number">2.1.</span> <span class="nav-text">基础操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库管理"><span class="nav-number">2.1.1.</span> <span class="nav-text">数据库管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#增加"><span class="nav-number">2.1.2.</span> <span class="nav-text">增加</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新"><span class="nav-number">2.1.3.</span> <span class="nav-text">更新</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除"><span class="nav-number">2.1.4.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询"><span class="nav-number">2.1.5.</span> <span class="nav-text">查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#排序"><span class="nav-number">2.1.6.</span> <span class="nav-text">排序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表连接"><span class="nav-number">2.2.</span> <span class="nav-text">表连接</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#简单使用JOIN"><span class="nav-number">2.2.0.1.</span> <span class="nav-text">简单使用JOIN</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用LEFT-JOIN"><span class="nav-number">2.2.0.2.</span> <span class="nav-text">使用LEFT JOIN</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MySql中的NULL值"><span class="nav-number">2.2.1.</span> <span class="nav-text">MySql中的NULL值</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL中使用正则表达式"><span class="nav-number">2.3.</span> <span class="nav-text">MySQL中使用正则表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL事务"><span class="nav-number">2.4.</span> <span class="nav-text">MySQL事务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#事务的特点"><span class="nav-number">2.4.1.</span> <span class="nav-text">事务的特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL-中的事务安全型表类型"><span class="nav-number">2.4.2.</span> <span class="nav-text">MySQL 中的事务安全型表类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-ALTER-命令"><span class="nav-number">2.5.</span> <span class="nav-text">MySQL ALTER 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#增删字段"><span class="nav-number">2.5.1.</span> <span class="nav-text">增删字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改字段属性"><span class="nav-number">2.5.2.</span> <span class="nav-text">修改字段属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改变表类型"><span class="nav-number">2.5.3.</span> <span class="nav-text">改变表类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对表进行重命名"><span class="nav-number">2.5.4.</span> <span class="nav-text">对表进行重命名</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-索引"><span class="nav-number">2.6.</span> <span class="nav-text">MySQL 索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-如何防止重复记录"><span class="nav-number">2.7.</span> <span class="nav-text">MySQL 如何防止重复记录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用PRIMARY-KEY"><span class="nav-number">2.7.1.</span> <span class="nav-text">使用PRIMARY KEY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用唯一索引"><span class="nav-number">2.7.2.</span> <span class="nav-text">使用唯一索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#去除重复的其他方法"><span class="nav-number">2.7.3.</span> <span class="nav-text">去除重复的其他方法</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#MySql数据类型"><span class="nav-number">1.</span> <span class="nav-text">MySql数据类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数字类型"><span class="nav-number">1.1.</span> <span class="nav-text">数字类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#日期与时间类型"><span class="nav-number">1.2.</span> <span class="nav-text">日期与时间类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#字符串类型"><span class="nav-number">1.3.</span> <span class="nav-text">字符串类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-基本操作"><span class="nav-number">2.</span> <span class="nav-text">MySQL 基本操作</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数据库管理"><span class="nav-number">2.1.</span> <span class="nav-text">数据库管理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#增加"><span class="nav-number">2.2.</span> <span class="nav-text">增加</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#更新"><span class="nav-number">2.3.</span> <span class="nav-text">更新</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#删除"><span class="nav-number">2.4.</span> <span class="nav-text">删除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#查询"><span class="nav-number">2.5.</span> <span class="nav-text">查询</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#排序"><span class="nav-number">2.6.</span> <span class="nav-text">排序</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#表连接"><span class="nav-number">3.</span> <span class="nav-text">表连接</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#简单使用JOIN"><span class="nav-number">3.0.1.</span> <span class="nav-text">简单使用JOIN</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#使用LEFT-JOIN"><span class="nav-number">3.0.2.</span> <span class="nav-text">使用LEFT JOIN</span></a></li></ol></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MySql中的NULL值"><span class="nav-number">3.1.</span> <span class="nav-text">MySql中的NULL值</span></a></li></ol><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL中使用正则表达式"><span class="nav-number">4.</span> <span class="nav-text">MySQL中使用正则表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL事务"><span class="nav-number">5.</span> <span class="nav-text">MySQL事务</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#事务的特点"><span class="nav-number">5.1.</span> <span class="nav-text">事务的特点</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#MySQL-中的事务安全型表类型"><span class="nav-number">5.2.</span> <span class="nav-text">MySQL 中的事务安全型表类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-ALTER-命令"><span class="nav-number">6.</span> <span class="nav-text">MySQL ALTER 命令</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#增删字段"><span class="nav-number">6.1.</span> <span class="nav-text">增删字段</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改字段属性"><span class="nav-number">6.2.</span> <span class="nav-text">修改字段属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#改变表类型"><span class="nav-number">6.3.</span> <span class="nav-text">改变表类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对表进行重命名"><span class="nav-number">6.4.</span> <span class="nav-text">对表进行重命名</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-索引"><span class="nav-number">7.</span> <span class="nav-text">MySQL 索引</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#MySQL-如何防止重复记录"><span class="nav-number">8.</span> <span class="nav-text">MySQL 如何防止重复记录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#使用PRIMARY-KEY"><span class="nav-number">8.1.</span> <span class="nav-text">使用PRIMARY KEY</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用唯一索引"><span class="nav-number">8.2.</span> <span class="nav-text">使用唯一索引</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#去除重复的其他方法"><span class="nav-number">8.3.</span> <span class="nav-text">去除重复的其他方法</span></a></li></ol></li></div>
             
 
           </div>
