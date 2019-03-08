@@ -79,17 +79,19 @@
 
 
 
-<meta name="description" content="Java线程池-基础 Java线程池-原理 Java线程相关方法 ReentrantLock 同步代码原理与锁优化 原子操作与加锁机制 终止线程的方法">
+<meta name="description" content="内存模型核心：针对内存可见性问题学习内存模型！！！  内存模型与线程间通信共享变量：实例域，静态域和数组元素都存储在堆内存中，在线程间共享。 局部变量：方法定义参数和异常处理器参数不会在线程间共享，即线程独有的。 JMM（Java内存模型），控制Java线程之间的通信。 JMM定义线程好主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java并发编程(1)">
+<meta property="og:title" content="Java并发编程：基础和原理">
 <meta property="og:url" content="http://kenetgit.top/2019/02/07/Java并发编程-1/index.html">
 <meta property="og:site_name" content="KenetGit&#39;s blog">
-<meta property="og:description" content="Java线程池-基础 Java线程池-原理 Java线程相关方法 ReentrantLock 同步代码原理与锁优化 原子操作与加锁机制 终止线程的方法">
+<meta property="og:description" content="内存模型核心：针对内存可见性问题学习内存模型！！！  内存模型与线程间通信共享变量：实例域，静态域和数组元素都存储在堆内存中，在线程间共享。 局部变量：方法定义参数和异常处理器参数不会在线程间共享，即线程独有的。 JMM（Java内存模型），控制Java线程之间的通信。 JMM定义线程好主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-02-28T15:22:26.537Z">
+<meta property="og:image" content="http://kenetgit.top/2019/02/07/Java并发编程-1/memory_model.png">
+<meta property="og:updated_time" content="2019-03-08T15:07:00.422Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Java并发编程(1)">
-<meta name="twitter:description" content="Java线程池-基础 Java线程池-原理 Java线程相关方法 ReentrantLock 同步代码原理与锁优化 原子操作与加锁机制 终止线程的方法">
+<meta name="twitter:title" content="Java并发编程：基础和原理">
+<meta name="twitter:description" content="内存模型核心：针对内存可见性问题学习内存模型！！！  内存模型与线程间通信共享变量：实例域，静态域和数组元素都存储在堆内存中，在线程间共享。 局部变量：方法定义参数和异常处理器参数不会在线程间共享，即线程独有的。 JMM（Java内存模型），控制Java线程之间的通信。 JMM定义线程好主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以">
+<meta name="twitter:image" content="http://kenetgit.top/2019/02/07/Java并发编程-1/memory_model.png">
 
 
 
@@ -125,7 +127,7 @@
 
 
 
-  <title>Java并发编程(1) | KenetGit's blog</title>
+  <title>Java并发编程：基础和原理 | KenetGit's blog</title>
   
 
 
@@ -270,7 +272,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Java并发编程(1)</h1>
+          <h1 class="post-title" itemprop="name headline">Java并发编程：基础和原理</h1>
         
 
         <div class="post-meta">
@@ -320,15 +322,217 @@
       
 
       
-        <ol>
-<li>Java线程池-基础</li>
-<li>Java线程池-原理</li>
-<li>Java线程相关方法</li>
-<li>ReentrantLock</li>
-<li>同步代码原理与锁优化</li>
-<li>原子操作与加锁机制</li>
-<li>终止线程的方法</li>
+        <h2 id="内存模型"><a href="#内存模型" class="headerlink" title="内存模型"></a>内存模型</h2><p>核心：针对<strong>内存可见性问题</strong>学习内存模型！！！</p>
+<p><img src="/2019/02/07/Java并发编程-1/memory_model.png" alt=""></p>
+<h3 id="内存模型与线程间通信"><a href="#内存模型与线程间通信" class="headerlink" title="内存模型与线程间通信"></a>内存模型与线程间通信</h3><p>共享变量：实例域，静态域和数组元素都存储在堆内存中，在线程间共享。</p>
+<p>局部变量：方法定义参数和异常处理器参数不会在线程间共享，即线程独有的。</p>
+<p><code>JMM</code>（<code>Java</code>内存模型），控制<code>Java</code>线程之间的通信。</p>
+<p><code>JMM</code>定义线程好主内存之间的抽象关系：线程之间的共享变量存储在主内存中，每个线程都有一个私有的本地内存，本地内存中存储了该线程以读/写共享变量的副本。</p>
+<p>本地内存（工作内存）是<code>JMM</code>的一个抽象概念，实际上并不存在，它涵盖了缓存、写缓冲区、寄存器以及其他的硬件和编译器优化。</p>
+<p>线程A与线程B的通信步骤：</p>
+<ol>
+<li>线程A把本地内存A中更新过的共享变量刷新到主内存中去</li>
+<li>线程B到主内存中去读线程A之前已更新过的共享变量</li>
 </ol>
+<p><code>JMM</code>就是通过控制主内存与每个线程的本地内存之间的交互，来为Java程序提供内存可见性保证。</p>
+<h3 id="源代码与指令序列的重排序"><a href="#源代码与指令序列的重排序" class="headerlink" title="源代码与指令序列的重排序"></a>源代码与指令序列的重排序</h3><p>在执行程序时，为了提高性能，编译器和处理器常常会对指令做重排序。重排序分3种类型。</p>
+<p>1） 编译器优化的重排序：编译器在不改变<strong>单线程</strong>程序语义的前提下，可以重新安排语句的执行顺序。</p>
+<p>2） 指令集并行的重排序：现代处理器采用了指令级并行技术来将多条指令重叠执行。如果不存在<strong>数据依赖性</strong>（对同一个变量的读写关系），处理器可以改变语句对应机器指令的执行顺序。</p>
+<p>3） 内存系统的重排序：由于处理器使用缓存和读/写缓冲区，这使得加载和存储操作看上去可能是在乱序执行。</p>
+<p>从Java源代码到最终实际执行的指令序列，会分别经历下面3种重排序。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">源代码--&gt;1.编译器优化重排序--&gt;2.指令级并行重排序--&gt;3.内存系统重排序--&gt;最终执行的指令序列</span><br></pre></td></tr></table></figure>
+<p>其中，2）和3）属于处理器重排序。</p>
+<p>JMM的编译器重排序规则会禁止<strong>特定类型</strong>的编译器重排序，对于处理器重排序，JMM的吹起重排序规则会要去Java编译器在生成指令序列时，插入特定类型的内存屏障指令，通过内存屏障指令来禁止特定类型的处理器重排序。JMM正是这样通过禁止特定类型的编译器重排序和处理器重排序，为程序员提供一致的内存可见性保证。</p>
+<h2 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h2><h3 id="synchronized"><a href="#synchronized" class="headerlink" title="synchronized"></a>synchronized</h3><p><code>synchronized</code>也被称为重量级锁，<code>Java 1.6</code>为了减少获得锁和释放锁带来的性能消耗而引入的偏向锁和轻量级锁，以及锁的存储结构和升级过程。使用synchronized实现同步的基础：每个对象都可以作为锁，具体表现为以下3种形式。</p>
+<ul>
+<li>对于普通同步方法，锁是当前实例对象</li>
+<li>对于静态同步方法，锁是当前类的<code>Class</code>对象</li>
+<li>对于同步方法块，锁是<code>synchronized</code>括号里配置的对象</li>
+</ul>
+<h4 id="1-synchronized在JVM中的实现原理："><a href="#1-synchronized在JVM中的实现原理：" class="headerlink" title="1. synchronized在JVM中的实现原理："></a>1. synchronized在JVM中的实现原理：</h4><p><code>JVM</code>基于进入和退出monitor对象来实现方法同步和代码块同步，二者的实现细节还有差异：代码块的同步是使用<code>monitorenter</code>和<code>monitorexit</code>指令实现的，而方法不同则是另一种实现方式（使用这两个指令也是可以实现方法同步的）。</p>
+<p><code>monitorenter</code>指令是在编译后插入到同步代码块的开始位置，而<code>monitorexit</code>是插入到方法结束和异常处，<code>JVM</code>要保证每个<code>monitorenter</code>必须有对应的<code>monitorexit</code>与之配对。任何对象都有一个<code>monitor</code>与之关联，当一个<code>monitor</code>被持有之后，它将处于锁定状态。线程执行到<code>monitorenter</code>指令时，就会尝试获取对象所对应的<code>monitor</code>的所有权，即尝试获取对象锁。</p>
+<p>synchronized用到的锁是存放在<strong>Java的对象头</strong>中的<code>Mark Word</code>字段，该对象头字段|还存放了<code>hashcode</code>和分代年龄等信息。</p>
+<table>
+<thead>
+<tr>
+<th>锁状态</th>
+<th>25bit</th>
+<th>4 bit</th>
+<th>1bit 是否偏向锁</th>
+<th>2bit 锁标志位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无锁状态</td>
+<td>对象的hashCoe</td>
+<td>对象分代年龄</td>
+<td>0</td>
+<td>01</td>
+</tr>
+</tbody>
+</table>
+<p><code>Mark Word</code>存储的数据结构和信息会随着锁标志位的变化而发生变化。</p>
+<table>
+<thead>
+<tr>
+<th>锁状态</th>
+<th>存储内容</th>
+<th>标志位</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>轻量级锁</td>
+<td>指向栈中锁记录的指针</td>
+<td>00</td>
+</tr>
+<tr>
+<td>重量级锁</td>
+<td>指向互斥量（重量级锁）的指针</td>
+<td>10</td>
+</tr>
+<tr>
+<td>GC标记</td>
+<td>空</td>
+<td>11</td>
+</tr>
+<tr>
+<td>偏向锁</td>
+<td>偏向线程ID、偏向时间戳、对象分代年龄、是否偏向锁（1）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="2-锁的升级"><a href="#2-锁的升级" class="headerlink" title="2.  锁的升级"></a>2.  锁的升级</h4><p><code>Java 1.6</code>引入了<strong>偏向锁</strong>和<strong>轻量级锁</strong>，并且锁有4种状态，级别从低到高依次是：无锁状态、偏向锁状态、轻量级锁状态和重量级锁状态，这几个状态会随着竞争情况逐渐升级。锁可以升级但不能降级。</p>
+<ul>
+<li><p>偏向锁</p>
+<p>目的是消除数据再无竞争情况下的同步原语。偏向锁会偏向第一个获取它的线程，如果在执行的过程中，该锁没有被其他线程获取，则当前获得锁的线程不会进行同步。</p>
+<p>当锁对象第一次被线程获取的时候，线程使用<code>CAS</code>操作把这个锁的线程ID记录到对象头的<code>Mark Word</code>中，同时置偏向标记位为1。以后线程在进入和退出同步块时不需要进行<code>CAS</code>操作来加锁和解锁，只需要简单地测试一下对象头的<code>Mark Word</code>里是否存储着指向当前线程的偏向锁（即线程ID），如果测试成功则表示线程已经获得了锁。</p>
+<p>如果线程使用CAS操作时失败则表示该锁对象上存在竞争并且这个时候另一个线程获得偏向锁的所有权。当到达<strong>全局安全点</strong>时，持有锁的线程被暂停，重新设置对象头的<code>Mark Word</code>为<strong>无锁状态</strong>（不是偏向锁的状态，从而接下来发生锁升级），然后恢复线程，继续执行。</p>
+</li>
+<li><p>轻量级锁</p>
+<p>加锁：线程执行同步块之前，JVM会先在当前线程的栈帧中创建用于存储锁记录的空间，并将对象头中的<code>Mark Word</code>复制到锁记录中，官方称为<code>Displaced Mark Word</code>。然后线程尝试使用<code>CAS</code>将对象头中的<code>Mark Word</code>替换为指向锁记录的指针。（从无锁升级为轻量级锁）。如果成功，当前线程获得锁；否则表示存在锁竞争，当前线程使用<strong>自旋</strong>来等待获得锁。</p>
+<p>解锁：使用<code>CAS</code>操作将<code>Displaced Mark Word</code>替换回到对象头，如果成功则表示没有竞争发生。如果失败，表示锁存在竞争，锁就会膨胀成为重量级锁。</p>
+<blockquote>
+<p>因为自旋会消耗CPU，所以锁升级为重量级锁之后不会降级到轻量级锁，以免发生严重的自旋。重量级锁中，试图获得锁的线程会阻塞直到锁被释放后才会被唤醒。</p>
+</blockquote>
+</li>
+<li><p>锁的优缺点</p>
+</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">锁</th>
+<th style="text-align:left">优点</th>
+<th style="text-align:left">缺点</th>
+<th>适用场合</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">偏向锁</td>
+<td style="text-align:left">加、解锁无额外消耗</td>
+<td style="text-align:left">如果存在竞争，<br>则会有额外的锁撤销消耗</td>
+<td>只有一个线程访问同步块</td>
+</tr>
+<tr>
+<td style="text-align:center">轻量级锁</td>
+<td style="text-align:left">竞争的线程不阻塞，<br>提高响应速度</td>
+<td style="text-align:left">自旋消耗CPU资源</td>
+<td>追求响应时间</td>
+</tr>
+<tr>
+<td style="text-align:center">重量级锁</td>
+<td style="text-align:left">不适用自旋，不会消耗CPU</td>
+<td style="text-align:left">线程阻塞，响应时间较慢</td>
+<td>追求吞吐量</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p> CAS的缺陷</p>
+<p>（1）<code>ABA</code>问题，解决思路，使用版本号。在变量前面追加上版本号，每次变量更新的时候版本号加1，检查是否相同的时候同时检查版本号即可检查出<code>ABA</code>问题。</p>
+</blockquote>
+<h3 id="volatile"><a href="#volatile" class="headerlink" title="volatile"></a>volatile</h3><h4 id="1-volatile-读-写的内存语义"><a href="#1-volatile-读-写的内存语义" class="headerlink" title="1. volatile 读-写的内存语义"></a>1. volatile 读-写的内存语义</h4><p>理解<code>volatile</code>特性的一种方式，是把对<code>volatile</code>变量的单个读/写，看成是使用同一个锁对这些单个读/写操作做了同步。从内存语义来讲，<code>volatile</code>的写-读与锁的释放-获取具有相同的内存效果：<code>volatile</code>写和锁的释放具有相同的内存语义；<code>volatile</code>读与锁的获取具有相同的内存语义。</p>
+<ul>
+<li>当写一个<code>volatile</code>变量时，<code>JMM</code>会把该线程对应的本地内存中的共享变量值刷新到主内存。</li>
+<li>当读一个<code>volatile</code>变量时，<code>JMM</code>会把线程对应的本地内存中的值置为无效，然后重新从内存中读取共享变量。</li>
+</ul>
+<p>线程之间这种读写的一致性，实际上就是线程之间的进行了通信。</p>
+<h4 id="2-volatile-内存语义的实现"><a href="#2-volatile-内存语义的实现" class="headerlink" title="2. volatile 内存语义的实现"></a>2. volatile 内存语义的实现</h4><p>为了实现<code>volatile</code>的内存语义，<code>JMM</code>会分别限制编译器重排序和处理器重排序，<code>JMM</code>针对编译器中排序指定了<code>volatile</code>重排序规则表。</p>
+<p>（规则表）</p>
+<p>为了实现<code>volatile</code>的内存语义，编译器在生成字节码的时候，会在指令序列中插入<strong>内存屏障</strong>来禁止特定类型的处理器重排序。编译器是采取了比较保守的插入内存屏障的策略。</p>
+<p>各种屏障的作用：</p>
+<table>
+<thead>
+<tr>
+<th>屏障</th>
+<th>功能描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>StoreStore</td>
+<td>可以保证在volatile写之前，其前面的所有普通写操作都已经对任意处理器可见了，即所有的普通写被刷新到主内存中。</td>
+</tr>
+<tr>
+<td>StoreLoad</td>
+<td>避免volatile写与后面可能有的volatile读/写操作重排序。JMM选择在每个volatile写后面插入一个StoreLoad屏障</td>
+</tr>
+<tr>
+<td>LoadLoad</td>
+<td>用来禁止处理器把前面的volatile读与后面的普通读重排序</td>
+</tr>
+<tr>
+<td>LoadStore</td>
+<td>用来禁止处理器把前面的volatile读与后面的普通写重排序</td>
+</tr>
+</tbody>
+</table>
+<p><code>JMM</code>插入内存屏障的保守策略：</p>
+<ul>
+<li>在每个<code>volatile</code>写操作的前面插入一个<code>StoreStore</code>屏障</li>
+<li>在每个<code>volatile</code>写操作的后面插入一个<code>StoreLoad</code>屏障</li>
+<li>在每个<code>volatile</code>读操作的后面插入一个<code>LoadLoad</code>屏障</li>
+<li>在每个<code>volatile</code>读操作的后面插入一个<code>LoadStore</code>屏障</li>
+</ul>
+<h4 id="3-volatile-关键字具有可见性而不具有原子性"><a href="#3-volatile-关键字具有可见性而不具有原子性" class="headerlink" title="3. volatile 关键字具有可见性而不具有原子性"></a>3. volatile 关键字具有可见性而不具有原子性</h4><h3 id="锁及其内存语义"><a href="#锁及其内存语义" class="headerlink" title="锁及其内存语义"></a>锁及其内存语义</h3><p>锁的释放和获取的内存语义</p>
+<ul>
+<li>当线程获得锁的时候，<code>JMM</code>会把该线程对应的本地内存设置为无效，从而使得被监视器保护的临界区代码必须重新在主内存中读取共享变量。</li>
+<li>当线程释放锁的时候，<code>JMM</code>会把该线程对应的本地内存刷新到主内存中。</li>
+</ul>
+<h3 id="final域及其内存语义"><a href="#final域及其内存语义" class="headerlink" title="final域及其内存语义"></a>final域及其内存语义</h3><h3 id="happens-before"><a href="#happens-before" class="headerlink" title="happens-before"></a>happens-before</h3><h3 id="双重检查锁定与延迟初始化"><a href="#双重检查锁定与延迟初始化" class="headerlink" title="双重检查锁定与延迟初始化"></a>双重检查锁定与延迟初始化</h3><p>在Java多线程中，有时候需要采用延迟初始化类和延迟创建对象的开销。双重检查锁定是常见的延迟初始化技术，但使用它容易忽视一些重要的细节从而导致错误使用（非线程安全），下面将介绍如何使用线程安全的延迟初始化技术。</p>
+<h4 id="1-非线程安全"><a href="#1-非线程安全" class="headerlink" title="1. 非线程安全"></a>1. 非线程安全</h4><p>在多线程环境中，线程A判断<code>instance==null</code>为真的时候开始创建对象（未完成），同时线程B也进入创建对象，这将导致重复创建对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyInitialization</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> LazyInitialization instance;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LazyInitialization <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(instance == <span class="keyword">null</span>)</span><br><span class="line">			instance = <span class="keyword">new</span> LazyInitialization();</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="2-线程安全但低效的"><a href="#2-线程安全但低效的" class="headerlink" title="2. 线程安全但低效的"></a>2. 线程安全但低效的</h4><p>在前面的代码上对<code>getInstance</code>直接加锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyInitialization</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> LazyInitialization instance;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">static</span> LazyInitialization <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(instance == <span class="keyword">null</span>)</span><br><span class="line">			instance = <span class="keyword">new</span> LazyInitialization();</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="3-双重检查锁定-（Double-Checked-Locking-DCL）"><a href="#3-双重检查锁定-（Double-Checked-Locking-DCL）" class="headerlink" title="3. 双重检查锁定 （Double-Checked Locking, DCL）"></a>3. 双重检查锁定 （Double-Checked Locking, DCL）</h4><ul>
+<li>第一次检查如果不为<code>null</code>，就直接返回<code>instance</code>。否则在创建对象之前需要加锁。</li>
+<li>当多个线程都视图创建对象时，会通过加锁来保证只有一个线程能创建对象。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyInitialization</span> </span>&#123; <span class="comment">// 1.</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> LazyInitialization instance; <span class="comment">// 2. </span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LazyInitialization <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  <span class="comment">// 3. </span></span><br><span class="line">		<span class="keyword">if</span>(instance == <span class="keyword">null</span>)  <span class="comment">// 4. 第一次检查</span></span><br><span class="line">			<span class="keyword">synchronized</span> (LazyInitialization.class) &#123;  <span class="comment">// 5. 加锁</span></span><br><span class="line">				<span class="keyword">if</span>(instance == <span class="keyword">null</span>) &#123;  <span class="comment">// 6. 第二次检查</span></span><br><span class="line">					instance = <span class="keyword">new</span> LazyInitialization();<span class="comment">// 7. 问题的根源			</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述的第7行代码所执行的赋值语句可以分解为如下代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">memory = allocate();   <span class="comment">//1. 分配对象的空间</span></span><br><span class="line">ctorInstance(memory);  <span class="comment">//2. 初始化对象</span></span><br><span class="line">instance = memory;     <span class="comment">//3. 设置instance指向刚分配的内存地址</span></span><br></pre></td></tr></table></figure>
+<p>而上面的2.和3.可能被重排序，且这一重排序不会改变在单线程下的执行结果。重排之后，2.初始化发生在3.之后。导致在多线程环境中，如果线程A中执行重排序后的代码，其他线程（线程B）访问<code>instance</code>时就会发现其不为<code>null</code>，因为<code>instance</code>已经指向了一片内存区域。也就是说线程B看到了一个不为空的引用指向了一个未初始化的对象。所以问题的根源在于指令重排序以及重排序后的执行结果对其他线程可见。解决问题的途径有以下2种：</p>
+<p>1）不允许2和3重排序</p>
+<p>2）允许2和3重排序，但不允许其他线程“看到”这个重排序。</p>
+<h4 id="4-基于volatile的解决方案"><a href="#4-基于volatile的解决方案" class="headerlink" title="4. 基于volatile的解决方案"></a>4. 基于volatile的解决方案</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LazyInitialization</span> </span>&#123; <span class="comment">// 1.</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">volatile</span> <span class="keyword">static</span> LazyInitialization instance; <span class="comment">// 2. 使用volatile</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> LazyInitialization <span class="title">getInstance</span><span class="params">()</span> </span>&#123;  <span class="comment">// 3. </span></span><br><span class="line">		<span class="keyword">if</span>(instance == <span class="keyword">null</span>)  <span class="comment">// 4. 第一次检查</span></span><br><span class="line">			<span class="keyword">synchronized</span> (LazyInitialization.class) &#123;  <span class="comment">// 5. 加锁</span></span><br><span class="line">				<span class="keyword">if</span>(instance == <span class="keyword">null</span>) &#123;  <span class="comment">// 6. 第二次检查</span></span><br><span class="line">					instance = <span class="keyword">new</span> LazyInitialization();<span class="comment">// 7. 		</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">		<span class="keyword">return</span> instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个解决方案要求<code>JDK5</code>或以上版本。使用<code>volatile</code>关键字修饰引用声明，重排序在多线程中将被禁止，从而保证线程安全的延迟初始化。</p>
+<h4 id="5-基于类初始化的解决方案"><a href="#5-基于类初始化的解决方案" class="headerlink" title="5. 基于类初始化的解决方案"></a>5. 基于类初始化的解决方案</h4><p>这种方案是利用<code>JVM</code>的类加载过程的机制来解决的，因为<code>JVM</code>在类的初始化阶段会执行类的初始化，而在类的初始化期间，<code>JVM</code>会获取一个锁，这个锁可以同步多个线程对同一个类的初始化。<strong>在同一个类加载器下，一个类型只会被初始化一次</strong>。当一个线程获得锁并开始初始化一个类的时候，其他试图获得锁的线程将被阻塞，<code>JVM</code>在类加载过程的这一特性保证了类的初始化的线程安全性。</p>
+<blockquote>
+<p>类的初始化：调用类的构造器<code>&lt;cinit&gt;</code>对静态代码块或者静态成员进行初始化，这是由虚拟机隐式完成的。注意类的构造器区别于构造函数（前者是在类加载过程中的初始化用到的，后者是创建类对象实例的时候用到的）。</p>
+</blockquote>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InstanceFactory</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 静态内部类,类加载过程中的初始化阶段完成静态内部类的初始化</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InstanceHolder</span> </span>&#123;</span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">static</span> InstanceFactory instance = <span class="keyword">new</span> InstanceFactory();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 静态方法第一次被调用时，将初始化静态内部类</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> InstanceFactory <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> InstanceHolder.instance;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>因为<code>JVM</code>把静态内部类当做<code>top-level</code>类处理的，因此会把它从类内部独立出来完成类的加载过程并初始化它内部的静态成员。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">InstanceFactory</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// main函数之前被执行，即类加载的初始化阶段</span></span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">"InstanceFactory static block...."</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 静态内部类</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">InstanceHolder</span> </span>&#123;</span><br><span class="line">		<span class="keyword">public</span> <span class="keyword">static</span> InstanceFactory instance = <span class="keyword">new</span> InstanceFactory();</span><br><span class="line">		<span class="keyword">static</span> &#123;</span><br><span class="line">			System.out.println(<span class="string">"InstanceHolde static block..."</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">// 静态方法getInstance第一次被调用时，将初始化静态内部类InstanceHolder</span></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> InstanceFactory <span class="title">getInstance</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"getInstance....."</span>);</span><br><span class="line">		<span class="comment">// InstanceHolder第一次被使用，进行类加载过程，既完成初始化</span></span><br><span class="line">		<span class="keyword">return</span> InstanceHolder.instance;</span><br><span class="line">	&#125;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		</span><br><span class="line">		System.out.println(<span class="string">"in main...."</span>);</span><br><span class="line">		InstanceFactory holder = InstanceFactory.getInstance();</span><br><span class="line">		<span class="comment">// 同一个对象</span></span><br><span class="line">		System.out.println(holder);</span><br><span class="line">		InstanceFactory holder1 = InstanceFactory.getInstance();</span><br><span class="line">		<span class="comment">// 同一个对象</span></span><br><span class="line">		System.out.println(holder1);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出结果，可见，外部类的静态代码块在main函数之前，即加载<code>InstanceFactory</code>的过程完成对静态代码块的初始化。而静态内部类等待第一次被使用的时候才开始类加载、完成初始化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">InstanceFactory static block....</span><br><span class="line">in main....</span><br><span class="line">getInstance.....</span><br><span class="line">InstanceHolde static block...</span><br><span class="line">concurrencyProgramming.InstanceFactory@15db9742</span><br><span class="line">getInstance.....</span><br><span class="line">concurrencyProgramming.InstanceFactory@15db9742</span><br></pre></td></tr></table></figure>
+<hr>
+<ul>
+<li>2019.03.08 更新。</li>
+</ul>
+<hr>
 
       
     </div>
@@ -427,8 +631,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -445,7 +658,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -497,6 +710,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存模型"><span class="nav-number">1.</span> <span class="nav-text">内存模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内存模型与线程间通信"><span class="nav-number">1.1.</span> <span class="nav-text">内存模型与线程间通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#源代码与指令序列的重排序"><span class="nav-number">1.2.</span> <span class="nav-text">源代码与指令序列的重排序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#同步"><span class="nav-number">2.</span> <span class="nav-text">同步</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#synchronized"><span class="nav-number">2.1.</span> <span class="nav-text">synchronized</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-synchronized在JVM中的实现原理："><span class="nav-number">2.1.1.</span> <span class="nav-text">1. synchronized在JVM中的实现原理：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-锁的升级"><span class="nav-number">2.1.2.</span> <span class="nav-text">2.  锁的升级</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#volatile"><span class="nav-number">2.2.</span> <span class="nav-text">volatile</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-volatile-读-写的内存语义"><span class="nav-number">2.2.1.</span> <span class="nav-text">1. volatile 读-写的内存语义</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-volatile-内存语义的实现"><span class="nav-number">2.2.2.</span> <span class="nav-text">2. volatile 内存语义的实现</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-volatile-关键字具有可见性而不具有原子性"><span class="nav-number">2.2.3.</span> <span class="nav-text">3. volatile 关键字具有可见性而不具有原子性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#锁及其内存语义"><span class="nav-number">2.3.</span> <span class="nav-text">锁及其内存语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#final域及其内存语义"><span class="nav-number">2.4.</span> <span class="nav-text">final域及其内存语义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#happens-before"><span class="nav-number">2.5.</span> <span class="nav-text">happens-before</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#双重检查锁定与延迟初始化"><span class="nav-number">2.6.</span> <span class="nav-text">双重检查锁定与延迟初始化</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-非线程安全"><span class="nav-number">2.6.1.</span> <span class="nav-text">1. 非线程安全</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-线程安全但低效的"><span class="nav-number">2.6.2.</span> <span class="nav-text">2. 线程安全但低效的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-双重检查锁定-（Double-Checked-Locking-DCL）"><span class="nav-number">2.6.3.</span> <span class="nav-text">3. 双重检查锁定 （Double-Checked Locking, DCL）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-基于volatile的解决方案"><span class="nav-number">2.6.4.</span> <span class="nav-text">4. 基于volatile的解决方案</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#5-基于类初始化的解决方案"><span class="nav-number">2.6.5.</span> <span class="nav-text">5. 基于类初始化的解决方案</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

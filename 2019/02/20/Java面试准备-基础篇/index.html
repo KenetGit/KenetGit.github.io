@@ -88,7 +88,7 @@
 <meta property="og:description" content="本篇文章收集整理一些Java常考的基础问题，仅为准备面试之用。 基本类型和类对象的交换Java传参的有两种方式，一种是值传递，另一种是引用传递。而Java的引用传递不像C++的引用传递那样，C++的引用传递可以用于交换两个基本类型的变量值，因为C++的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而Java的引用，实际上是声明在栈上的变量对堆上的对象">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://kenetgit.top/2019/02/20/Java面试准备-基础篇/exception.png">
-<meta property="og:updated_time" content="2019-03-02T16:20:01.284Z">
+<meta property="og:updated_time" content="2019-03-08T14:29:35.488Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java基础篇">
 <meta name="twitter:description" content="本篇文章收集整理一些Java常考的基础问题，仅为准备面试之用。 基本类型和类对象的交换Java传参的有两种方式，一种是值传递，另一种是引用传递。而Java的引用传递不像C++的引用传递那样，C++的引用传递可以用于交换两个基本类型的变量值，因为C++的引用代表了所引用对象在内存的存储位置，通过引用直接操作内存，对引用变量赋值就相等于对内存写入。而Java的引用，实际上是声明在栈上的变量对堆上的对象">
@@ -402,10 +402,42 @@
 <p><code>finally</code>块：区别一下<code>finally</code>和<code>finalize</code>，前者一般用在异常处理中配置<code>try...catch</code>块使用，后者是<code>Object</code>类的一个<code>protected</code>方法；无论是否抛出异常，<code>finally</code>代码块都会被执行，它主要是用来释放应用占用的资源，而<code>finalize</code>方法用在对象被垃圾回收之前由虚拟机来调用。</p>
 </li>
 </ol>
-<h4 id="内部类机制"><a href="#内部类机制" class="headerlink" title="内部类机制"></a>内部类机制</h4><p>定义在一个类内部的类就称为内部类，内部类对同一个包中的其他类是不可见的。内部类可以访问自身数据，也可以访问创建它的外围类对象的数据域。内部类对象有一个对外围类对象的隐式引用，这个引用在内部类的定义中是不可见的，因为这是由编译器完成的。</p>
+<h4 id="内部类机制"><a href="#内部类机制" class="headerlink" title="内部类机制"></a>内部类机制</h4><p>定义在一个类内部的类就称为内部类，内部类对同一个包中的其他类是不可见的。内部类可以访问自身数据，也可以访问创建它的外围类对象的数据域。成员内部类对象有一个对外围类对象的隐式引用，这个引用在内部类的定义中是不可见的，因为这是由编译器完成的。</p>
 <p>在内部类中调用外部类的方法，通过<code>ClassName.this.attributes</code> 或者 <code>ClassName.this.method</code>。</p>
-<p>局部内部类是声明定义在方法体中的类，它的作用域被限制在该代码块的作用域中，也就是只有在该代码块内才能使用该类。</p>
-<p>内部类可以声明在接口中，并且自动成为<code>public static</code>。</p>
+<p>局部内部类是声明定义在方法体中的类，它的作用域被限制在该代码块的作用域中，也就是只有在该代码块内才能使用该类。内部类可以声明在接口中，并且自动成为<code>public static</code>。</p>
+<ul>
+<li><p>内部类有多少种？</p>
+<p>1）静态内部类</p>
+<p>静态内部类的类型可以是<code>class</code>、<code>interface</code>或<code>enum</code>，而其他类型的内部类只能是<code>class</code>。静态内部类实际上是一个<code>top-level</code>的类，即源代码文件级别的类，它不依赖外部类，因为它是类级别的，和类静态成员相似。静态内部类不包括对外部类的引用，因此不能访问外部类的成员或方法，但可以使用外部类的<code>static</code>成员，这一点和静态类的特性相似。也就是类级别和实例级别的区别。</p>
+<p>2）成员内部类</p>
+<p>成员内部类最重要的特点是可以直接使用外部类的实例成员和<code>static</code>成员，这一点与使用<code>private</code>还是<code>public</code>无关。因为内部类拥有对外部类的引用，因此创建一个内部类对象的时候总需要先创建一个外部类对象。成员内部类不能有静态成员和方法（除非静态成员是final的，这种情况下变量相当于是一个符号引用），因为在java中要求静态成员必须定义在一个<code>top-level</code>的类中。</p>
+<p>3）局部内部类</p>
+<p>定义在一个方法内部的类，就是局部内部类；局部内部类只能在方法的作用域之内使用，且不能有任何的访问权限符。</p>
+<blockquote>
+<p> 局部内部类与闭包</p>
+<p>局部内部类可以和成员内部类一样访问外部类的实例成员，同时它还能直接使用所在方法体内声明的局部final常量，final参数。<code>javac</code>会复制外部方法的局部final变量，将它们保存在局部内部类做作为私有的备份。当方法体执行结束后，如果局部内部类的实例被返回，也就是被方法外的其他变量所引用，那么它的生命就逃逸出了方法的生命周期而延迟到了方法外，同时它所包含的方法体内的final变量也被带出去，从而形成了闭包。</p>
+</blockquote>
+<p>4）匿名内部类</p>
+<p>匿名内部类是特殊的局部内部类,它没有类名。它的访问特性和局部内类一样。如果只会使用类的一个对象,则可以使用匿名内部类,没有名称避免了再引入一个类名称， 匿名内部类是没有名称的局部内部类，访问特性与局部内部类一样。因为没有类名,因此只能使用父类名或者接口名来创建对象。</p>
+</li>
+</ul>
+<blockquote>
+<p>创建一个静态内部类不需要依赖外部类，而创建一个非静态的内部类则需要先创建一个外部类。</p>
+</blockquote>
+<ul>
+<li><p>内部类工作原理</p>
+<p>内部类只是Java的语法糖，<code>JVM</code>是不理解内部类的，它所看见的都是<code>top-level</code>顶层类。将内部类分离为单独的顶层类，是<code>javac</code>的任务。内部类被<code>javac</code>合成为单独的类，并形成独立的<code>Class</code>文件，这个文件有独特的名称，形式如下：</p>
+<ul>
+<li>static内部类:  OutterClass$InnerClass.class</li>
+<li>成员内部类：OutterClass$InnerClass.class</li>
+<li>局部内部类:  OutterClass$XInnerClass.class           # X为一个正整数</li>
+<li>局部内部类:  OutterClass$X.class                          # X为一个正整数</li>
+</ul>
+<p>对于static内部类，无需多解释，因为 static内部类和外部类是无依赖关系的，static内部类不包含外部类引用，<code>javac</code>只是将他们简单的分离。</p>
+</li>
+<li><p>内部类什么时候被初始化？</p>
+</li>
+</ul>
 <h4 id="Java四种引用类型"><a href="#Java四种引用类型" class="headerlink" title="Java四种引用类型"></a>Java四种引用类型</h4><blockquote>
 <p> <a href="https://www.cnblogs.com/liyutian/p/9690974.html" target="_blank" rel="noopener">参考博文</a></p>
 </blockquote>
@@ -430,16 +462,35 @@
 <li>重点了解一下泛型擦除的过程和规则</li>
 <li>因为泛型擦除，所以实际使用泛型时应该注意哪些问题</li>
 </ul>
+<blockquote>
+<p>参考<a href="http://www.importnew.com/24029.html#comment-746693" target="_blank" rel="noopener">Java泛型详解</a></p>
+</blockquote>
+<h4 id="switch-语句"><a href="#switch-语句" class="headerlink" title="switch 语句"></a>switch 语句</h4><p><code>Java</code>中的<code>switch</code>在使用上需要注意的一些细节，主要体现在<code>case</code>语句和<code>break</code>语句上，以下列出需要重点关注的知识点。</p>
+<ul>
+<li><code>switch</code> 语句中的变量类型可以是： byte、short、int 或者 char。（对应的包装器对象也可以）</li>
+<li>【考点】从 <code>Java SE 7</code> 开始，<code>switch</code> 支持字符串 <code>String</code> 类型了，同时 <code>case</code> 标签<strong>必须为字符串常量或字面量</strong>。</li>
+<li>当变量的值与 <code>case</code> 语句的值相等时，那么 <code>case</code> 语句之后的语句开始执行，直到 <code>break</code> 语句出现才会跳出 <code>switch</code> 语句。但是，case 语句不必须要包含 <code>break</code> 语句。如果没有 <code>break</code> 语句出现，程序会继续执行下一条 <code>case</code> 语句，直到出现 <code>break</code> 语句。</li>
+<li><code>default</code> 在没有<code>case</code> 语句的值和变量值相等的时候执行。当<code>default</code>分支放在末尾时，可以不需要 <code>break</code> 语句。</li>
+<li>case 语句中的值的数据类型必须与<code>switch</code>语句中的变量具有相同的数据类型，而且只能是常量或者字面常量</li>
+<li>当 <code>default</code> 放在最前面时不被执行，只有不在最前面的时候才会执行。</li>
+</ul>
 <h4 id="equals-和"><a href="#equals-和" class="headerlink" title="equals 和 =="></a>equals 和 ==</h4><ul>
 <li>== 的作用：<br>基本类型：比较的就是值是否相同<br>引用类型：比较的就是地址值是否相同</li>
 <li>equals 的作用：引用类型：默认情况下，比较的是地址值。但是可以根据情况自己重写该方法。一般重写都是自动生成，比较对象的成员变量值是否相同。</li>
 </ul>
-<h4 id="String系列"><a href="#String系列" class="headerlink" title="String系列"></a>String系列</h4><p>首先需要了解一下<code>字面常量</code>和<code>符号引用</code>。</p>
+<h4 id="String系列"><a href="#String系列" class="headerlink" title="String系列"></a>String系列</h4><ul>
+<li>String、StringBuilder和StringBuffer</li>
+</ul>
+<p>首先需要了解一下<code>字面常量</code>和<code>符号引用</code>。</p>
 <p><code>String</code>对象上的一切<code>change</code>操作都是返回新的<code>String</code>对象；而<code>StringBuiler</code>则是在原对象上进行操作。所以，如果需要修改一个<code>字符串</code>对象的值，应该使用<code>StringBuiler</code>而不是<code>String</code>。</p>
 <p><code>StringBuilder</code>和<code>StringBuffer</code>类拥有的成员属性以及成员方法基本相同，区别是<code>StringBuffer</code>类的成员方法前面多了一个关键字<code>synchronized</code>，所以<code>StringBuffer</code>是线程安全的。</p>
 <blockquote>
 <p>其他更为深入的介绍可以参考这篇博文：<a href="https://www.cnblogs.com/dolphin0520/p/3778589.html" target="_blank" rel="noopener">探秘Java中的String、StringBuilder以及StringBuffer</a></p>
 </blockquote>
+<ul>
+<li>String.intern()方法</li>
+<li></li>
+</ul>
 <h4 id="反射机制"><a href="#反射机制" class="headerlink" title="反射机制"></a>反射机制</h4><h4 id="Java的语法糖"><a href="#Java的语法糖" class="headerlink" title="Java的语法糖"></a>Java的语法糖</h4><blockquote>
 <p>参考：<a href="https://www.cnblogs.com/qingshanli/p/9375040.html" target="_blank" rel="noopener">浅析java中的语法糖</a></p>
 </blockquote>
@@ -586,7 +637,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -648,7 +699,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本类型和类对象的交换"><span class="nav-number">1.</span> <span class="nav-text">基本类型和类对象的交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#装箱和拆箱"><span class="nav-number">2.</span> <span class="nav-text">装箱和拆箱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象构造、析构与初始化"><span class="nav-number">3.</span> <span class="nav-text">对象构造、析构与初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深复制和浅复制"><span class="nav-number">4.</span> <span class="nav-text">深复制和浅复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建对象的方式"><span class="nav-number">5.</span> <span class="nav-text">创建对象的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#封装"><span class="nav-number">6.</span> <span class="nav-text">封装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承与类型转换"><span class="nav-number">7.</span> <span class="nav-text">继承与类型转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态与动态绑定"><span class="nav-number">8.</span> <span class="nav-text">多态与动态绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抽象类与接口"><span class="nav-number">9.</span> <span class="nav-text">抽象类与接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object"><span class="nav-number">10.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常"><span class="nav-number">11.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内部类机制"><span class="nav-number">12.</span> <span class="nav-text">内部类机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java四种引用类型"><span class="nav-number">13.</span> <span class="nav-text">Java四种引用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#泛型和泛型擦除"><span class="nav-number">14.</span> <span class="nav-text">泛型和泛型擦除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#equals-和"><span class="nav-number">15.</span> <span class="nav-text">equals 和 ==</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String系列"><span class="nav-number">16.</span> <span class="nav-text">String系列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反射机制"><span class="nav-number">17.</span> <span class="nav-text">反射机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java的语法糖"><span class="nav-number">18.</span> <span class="nav-text">Java的语法糖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NIO基础"><span class="nav-number">19.</span> <span class="nav-text">NIO基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#native方法和JNI"><span class="nav-number">20.</span> <span class="nav-text">native方法和JNI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#applet"><span class="nav-number">21.</span> <span class="nav-text">applet</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基本类型和类对象的交换"><span class="nav-number">1.</span> <span class="nav-text">基本类型和类对象的交换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#装箱和拆箱"><span class="nav-number">2.</span> <span class="nav-text">装箱和拆箱</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象构造、析构与初始化"><span class="nav-number">3.</span> <span class="nav-text">对象构造、析构与初始化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#深复制和浅复制"><span class="nav-number">4.</span> <span class="nav-text">深复制和浅复制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#创建对象的方式"><span class="nav-number">5.</span> <span class="nav-text">创建对象的方式</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#封装"><span class="nav-number">6.</span> <span class="nav-text">封装</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#继承与类型转换"><span class="nav-number">7.</span> <span class="nav-text">继承与类型转换</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#多态与动态绑定"><span class="nav-number">8.</span> <span class="nav-text">多态与动态绑定</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#抽象类与接口"><span class="nav-number">9.</span> <span class="nav-text">抽象类与接口</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Object"><span class="nav-number">10.</span> <span class="nav-text">Object</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#异常"><span class="nav-number">11.</span> <span class="nav-text">异常</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#内部类机制"><span class="nav-number">12.</span> <span class="nav-text">内部类机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java四种引用类型"><span class="nav-number">13.</span> <span class="nav-text">Java四种引用类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#泛型和泛型擦除"><span class="nav-number">14.</span> <span class="nav-text">泛型和泛型擦除</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#switch-语句"><span class="nav-number">15.</span> <span class="nav-text">switch 语句</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#equals-和"><span class="nav-number">16.</span> <span class="nav-text">equals 和 ==</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#String系列"><span class="nav-number">17.</span> <span class="nav-text">String系列</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反射机制"><span class="nav-number">18.</span> <span class="nav-text">反射机制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Java的语法糖"><span class="nav-number">19.</span> <span class="nav-text">Java的语法糖</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#NIO基础"><span class="nav-number">20.</span> <span class="nav-text">NIO基础</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#native方法和JNI"><span class="nav-number">21.</span> <span class="nav-text">native方法和JNI</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#applet"><span class="nav-number">22.</span> <span class="nav-text">applet</span></a></li></ol></div>
             
 
           </div>

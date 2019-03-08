@@ -79,14 +79,17 @@
 
 
 
+<meta name="description" content="1. lambda表达式Java 8的新特性，Lambda，将函数式编程引入Java。Lambda表达式允许把函数作为一个方法的参数，该参数的类型是一个函数式接口。函数式接口，简单说就是只有一个抽象方法的接口。Java 8中引入了注解@FunctionalInterface，用来说明一个接口是函数式接口，但是它的作用不是声明函数式接口所必须的，同@Override注解一样，它的作用仅是为了注释说明">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Java 8 新特性">
 <meta property="og:url" content="http://kenetgit.top/2019/03/03/Java-8-新特性/index.html">
 <meta property="og:site_name" content="KenetGit&#39;s blog">
+<meta property="og:description" content="1. lambda表达式Java 8的新特性，Lambda，将函数式编程引入Java。Lambda表达式允许把函数作为一个方法的参数，该参数的类型是一个函数式接口。函数式接口，简单说就是只有一个抽象方法的接口。Java 8中引入了注解@FunctionalInterface，用来说明一个接口是函数式接口，但是它的作用不是声明函数式接口所必须的，同@Override注解一样，它的作用仅是为了注释说明">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-02T16:21:28.284Z">
+<meta property="og:updated_time" content="2019-03-03T15:13:24.463Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java 8 新特性">
+<meta name="twitter:description" content="1. lambda表达式Java 8的新特性，Lambda，将函数式编程引入Java。Lambda表达式允许把函数作为一个方法的参数，该参数的类型是一个函数式接口。函数式接口，简单说就是只有一个抽象方法的接口。Java 8中引入了注解@FunctionalInterface，用来说明一个接口是函数式接口，但是它的作用不是声明函数式接口所必须的，同@Override注解一样，它的作用仅是为了注释说明">
 
 
 
@@ -317,7 +320,269 @@
       
 
       
-        
+        <h3 id="1-lambda表达式"><a href="#1-lambda表达式" class="headerlink" title="1. lambda表达式"></a>1. lambda表达式</h3><p>Java 8的新特性，<code>Lambda</code>，将函数式编程引入<code>Java</code>。<code>Lambda</code>表达式允许把函数作为一个方法的参数，该参数的类型是一个函数式接口。函数式接口，简单说就是只有一个抽象方法的接口。<code>Java 8</code>中引入了注解<code>@FunctionalInterface</code>，用来说明一个接口是函数式接口，但是它的作用不是声明函数式接口所必须的，同<code>@Override</code>注解一样，它的作用仅是为了注释说明。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 该注解的源码</span></span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Target</span>(ElementType.TYPE)</span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> FunctionalInterface &#123;&#125;</span><br></pre></td></tr></table></figure>
+<p>我们所熟悉的<code>Runnable</code>和<code>Callable</code>，实际上就是典型的函数式接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Callable</span>&lt;<span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">V <span class="title">call</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>一个<code>lambda</code>表达式可以赋值给这样的函数式接口，作为参数传递时将自动进行转换。这种转换是由底层完成的。实际上，在<code>Java 8</code>中，<code>lambda</code>表达式只有转换成函数式接口才能被使用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 自定义函数式接口</span></span><br><span class="line"><span class="meta">@FunctionalInterface</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">FunctionTest</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 使用函数式接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LambdaTest1</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// lambda表达式自动转换为函数式接口</span></span><br><span class="line">		display(()-&gt;&#123;</span><br><span class="line">			System.out.println(<span class="string">"FunctionalInterface"</span>);</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">display</span><span class="params">(FunctionTest func)</span> </span>&#123;</span><br><span class="line">		func.method();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>lambda表达式的变量作用域：</strong></p>
+<p>① 自由变量是lambda表达式“捕获”的，需要存储在lambda表达式的数据结构中的值<br>② lambda表达式只能引用那些值不会发生变化的变量，也即在lambda表达式中<strong>不能改变自由变量</strong><br>③ lambda表达式捕获的变量可能在外部发生改变，lambda表达式的执行就会出错（非法的）<br>④ 所以lambda表达式捕获的变量应该是<strong>最终变量</strong>，最终变量的概念是指这个变量初始化后就不会再为它赋值<br>⑤ lambda表达式中的 <strong>this</strong> 指向 <code>创建lambda表达式</code>的方法的 this，也就是引用了创建该<code>lambda</code>表达式的类对象。</p>
+<h3 id="2-接口的默认方法与静态方法"><a href="#2-接口的默认方法与静态方法" class="headerlink" title="2. 接口的默认方法与静态方法"></a>2. 接口的默认方法与静态方法</h3><p>先回顾一下Java中，接口的一些特性。</p>
+<p>① 接口不能实例化，但是可以使用接口变量引用实现了该接口的对象实例<br>② 可以实现 instanceof 检查是否实现了某接口<br>③ 接口可以用于继承，一个接口继承另一个接口，从而形成接口链<br>④ 接口不能包含实例域和静态方法，但是可以有常量，而且常量变量将被<strong>自动设置</strong>为 public static final（这一点与接口不能被实例化是一致的）<br>⑤ <strong>Java SE 8中允许有静态方法，且允许接口声明时，使用 default 关键字，可以为接口定义默认方法</strong></p>
+<hr>
+<p>附加说明：</p>
+<blockquote>
+<p>使用接口方法的修饰符时，只允许public, abstract, default, static 和 strictfp </p>
+</blockquote>
+<p><code>strictfp</code>关键字可应用于类、接口或方法。使用 <code>strictfp</code> 关键字声明一个方法时，该方法中所有的float和double表达式都严格遵守<code>FP-strict</code>的限制,符合<code>IEEE-754</code>规范。当对一个类或接口使用 <code>strictfp</code> 关键字时，该类中的所有代码，包括嵌套类型中的初始设定值和代码，都将严格地进行计算。严格约束意味着所有表达式的结果都必须是<code>IEEE 754</code>算法对操作数预期的结果，以单精度和双精度格式表示。如果你想让你的浮点运算更加精确，而且不会因为不同的硬件平台所执行的结果不一致的话，可以用关键字<code>strictfp</code>. </p>
+<hr>
+<p>上述的第⑤点就是我们要讲的，<code>Java8</code>中允许接口有默认方法和静态方法。引入这两个特性之后，我们就不再需要在每个实现类中写一些重复的方法实现。也就说，<code>Java8</code>在接口上引入的这些特性，使得接口看起来像是“C++中的抽象类”。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义接口，使用默认方法和静态方法</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Java8InterfaceTest</span> </span>&#123;</span><br><span class="line">	<span class="comment">// 常量变量将被自动设置为 public static final</span></span><br><span class="line">	<span class="keyword">int</span> constantVar = <span class="number">1</span>;</span><br><span class="line">	</span><br><span class="line">	<span class="function"><span class="keyword">default</span> String <span class="title">defaultFunc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"i'm Java8InterfaceTest.defaultFunc in calss named: "</span> + <span class="keyword">this</span>.getClass().getName();</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="function"><span class="keyword">static</span> String <span class="title">staticFunc</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="string">"i'm Java8InterfaceTest.staticFunc"</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 使用接口</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MainTest</span> <span class="keyword">implements</span> <span class="title">Java8InterfaceTest</span></span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">		MainTest mainTest = <span class="keyword">new</span> MainTest();</span><br><span class="line">		System.out.println(mainTest.defaultFunc());</span><br><span class="line">		System.out.println(Java8InterfaceTest.staticFunc());</span><br><span class="line">		System.out.println(Java8InterfaceTest.constantVar);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="默认方法及其冲突的解决"><a href="#默认方法及其冲突的解决" class="headerlink" title="默认方法及其冲突的解决"></a>默认方法及其冲突的解决</h4><p>默认方法出现的是为了对原有接口的扩展，有了默认方法之后就不怕因改动原有的接口而对已经使用这些接口的程序造成的代码不兼容的影响。 在<code>Java8</code>中也对一些接口增加了一些默认方法，比如<code>Map</code>接口等等。一般来说，使用默认方法的场景有两个：可选方法和行为的多继承。</p>
+<p>默认方法的使用相对来说比较简单，唯一要注意的点是<strong>如何处理默认方法的冲突</strong>。关于如何处理默认方法的冲突可以参考以下<strong>三条规则</strong>：</p>
+<ol>
+<li><strong>类中的方法优先级最高</strong>。类或父类中声明的方法的优先级高于任何声明为默认方法的优先级。</li>
+<li>如果无法依据第一条规则进行判断，那么<strong>子接口</strong>的优先级更高：函数签名相同时，优先选择拥有最具体实现的默认方法的接口。即如果B继承了A，那么B就比A更具体。</li>
+<li>最后，如果还是无法判断，继承了多个接口的类，必须通过<strong>显式覆盖和调用</strong>期望的方法，显式地选择使用哪一个默认方法的实现。那么如何显式地指定呢：使用<code>X.super.m(..)</code>显式地调用。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">C</span> <span class="keyword">implements</span> <span class="title">B</span>, <span class="title">A</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">hello</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        B.<span class="keyword">super</span>().hello();    </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="3-Optional类"><a href="#3-Optional类" class="headerlink" title="3. Optional类"></a>3. Optional类</h3><p>Java 8引入<code>Optional</code>类来防止空指针异常，<code>Optional</code>类实际上是个容器：它可以保存类型T的值，或者保存null。使用<code>Optional</code>类可以避免否频繁地显式进行空指针检查导致的代码臃肿的情况，传统情况下，我们经常需要使用<code>if</code>语句判断对象是否为<code>null</code>。</p>
+<p>所以，<code>Optional</code>只是<code>Java 8</code>中引入的用于更加优雅地处理<code>null</code>和<code>NullPointerException</code>而封装的一个类。它的优雅之处在何处？让我们看一个例子：</p>
+<ul>
+<li>常规地使用Java</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getChampionName</span><span class="params">(Competition comp)</span> <span class="keyword">throws</span> IllegalArgumentException </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (comp != <span class="keyword">null</span>) &#123;</span><br><span class="line">        CompResult result = comp.getResult();</span><br><span class="line">        <span class="keyword">if</span> (result != <span class="keyword">null</span>) &#123;</span><br><span class="line">            User champion = result.getChampion();</span><br><span class="line">            <span class="keyword">if</span> (champion != <span class="keyword">null</span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> champion.getName();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">"The value of param comp isn't available."</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>将以上代码改成Optional风格</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> String <span class="title">getChampionName</span><span class="params">(Competition comp)</span> <span class="keyword">throws</span> IllegalArgumentException </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> Optional.ofNullable(comp)</span><br><span class="line">            .map(c-&gt;c.getResult())</span><br><span class="line">            .map(r-&gt;r.getChampion())</span><br><span class="line">            .map(u-&gt;u.getName())</span><br><span class="line">            .orElseThrow(()-&gt;<span class="keyword">new</span> IllegalArgumentException(<span class="string">"The value of param comp isn't available."</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上述代码的逻辑是：传入第一个map的值如果为null则放回空的Optional对象，在一个空的Optional对象上调用<code>map</code>方法会直接返回空的Optional对象，从而最终会执行<code>orElseThrow</code>抛出异常。</p>
+<p>Optional还可以用作检查入参的合法性，例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> <span class="keyword">throws</span> IllegalArgumentException </span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = Optional.ofNullable(name).filter(User::isNameValid)</span><br><span class="line">                        .orElseThrow(()-&gt;<span class="keyword">new</span> IllegalArgumentException(<span class="string">"Invalid username."</span>));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>以上代码样例来自<strong><a href="http://www.importnew.com/26066.html" target="_blank" rel="noopener">ImportNew</a></strong></p>
+</blockquote>
+<p><code>Optional</code>的主要方法及其使用介绍如下表：</p>
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>empty</td>
+<td>返回一个空的Optional实例</td>
+</tr>
+<tr>
+<td>of</td>
+<td>工厂方法，将指定值用Optional封装之后返回，<br>如果该值为null，抛出一个<code>NullPointerException</code>异常</td>
+</tr>
+<tr>
+<td>ofNullable</td>
+<td>工厂方法，将指定值用Optional封装之后返回，如果该值为null，<br>则返回一个空的Optional对象</td>
+</tr>
+<tr>
+<td>get</td>
+<td>如果该值存在，将该值用Optional封装返回，<br>否则抛出一个<code>NoSuchElementException</code>异常</td>
+</tr>
+<tr>
+<td>isPresent</td>
+<td>如果值存在就返回true，否则返回false</td>
+</tr>
+<tr>
+<td>ifPresent</td>
+<td>如果值存在，就执行传入的<code>Consumer</code>函数式接口的<code>accept</code>方法，该方法没有返回值</td>
+</tr>
+<tr>
+<td>orElse</td>
+<td>如果有值则将其返回，否则返回传入的指定的默认值</td>
+</tr>
+<tr>
+<td>orElseGet</td>
+<td>如果有值则将其返回，否则返回一个由传入的Supplier函数式接口的<code>get</code>方法返回的值</td>
+</tr>
+<tr>
+<td>orElseThrow</td>
+<td>如果有值则将其返回，否则抛出一个由传入的Supplier函数式接口生成的异常</td>
+</tr>
+<tr>
+<td>map</td>
+<td>如果值存在，就对该值执行提供的mapping函数调用，如果返回值不为null，则创建包含该返回值的Optional对象作为map方法返回值；否则返回空的Optional对象</td>
+</tr>
+<tr>
+<td>flatMap</td>
+<td>如果值存在，就对该值执行提供的mapping函数调用，返回一个Optional类型的值，否则就返回一个空的Optional对象。mapping函数的返回值类型应该是Optional，因为flatMap是直接返回mapping函数的返回值而不会将其进行包装成Optional</td>
+</tr>
+<tr>
+<td>filter</td>
+<td>如果值存在并且满足提供的谓词（传入的<code>Predicate</code>函数式接口的<code>test</code>方法），就返回包括该值的Optional对象；否则返回一个空的Optional对象</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-方法引用"><a href="#4-方法引用" class="headerlink" title="4. 方法引用"></a>4. 方法引用</h3><p>方法引用可以看作Lambda表达式的更简洁的一种表达形式，使用<code>::</code>操作符，方法引用主要有三类：</p>
+<ul>
+<li><p>指向静态方法的方法引用(例如<code>Integer</code>的<code>parseInt</code>方法，写作<code>Integer::parseInt</code>)；</p>
+</li>
+<li><p>指向任意类型实例方法的方法引用(例如<code>String</code>的<code>length</code>方法，写作<code>String::length</code>)；</p>
+</li>
+<li><p>指向现有对象的实例方法的方法引用(例如假设你有一个本地变量<code>localVariable</code>用于存放<code>Variable</code>类型的对象，它支持实例方法<code>getValue</code>，那么可以写成<code>localVariable::getValue</code>)。</p>
+</li>
+</ul>
+<h4 id="类方法引用"><a href="#类方法引用" class="headerlink" title="类方法引用"></a>类方法引用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 使用lambda表达式</span></span><br><span class="line">Function&lt;String, Integer&gt; stringToInteger = (String s) -&gt; Integer.parseInt(s);</span><br><span class="line"><span class="comment">//使用方法引用</span></span><br><span class="line">Function&lt;String, Integer&gt; stringToInteger1 = Integer::parseInt;</span><br><span class="line"><span class="comment">// 将入参应用到表达式上</span></span><br><span class="line">Integer num = stringToInteger.apply(<span class="string">"12"</span>);</span><br><span class="line">System.out.println(num == <span class="number">12</span>); <span class="comment">//true</span></span><br></pre></td></tr></table></figure>
+<h4 id="构造函数引用"><a href="#构造函数引用" class="headerlink" title="构造函数引用"></a>构造函数引用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 1. Supplier的get方法将返回构造函数返回的对象，此时构造函数必须是无参数的才行</span></span><br><span class="line">Supplier&lt;String&gt; c1 = String::<span class="keyword">new</span>;</span><br><span class="line">String s1 = c1.get();</span><br><span class="line"><span class="comment">//等价于</span></span><br><span class="line">Supplier&lt;String&gt; c2 = () -&gt; <span class="keyword">new</span> String();</span><br><span class="line">String s2 = c2.get();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 2. 有参数的构造函数,使用Function接口，配置它的apply方法</span></span><br><span class="line">Function&lt;String, ClassTest&gt; c11 = ClassTest::<span class="keyword">new</span>;</span><br><span class="line">ClassTest s11 = c11.apply(<span class="string">"100"</span>);</span><br><span class="line"><span class="comment">//等价于</span></span><br><span class="line">Function&lt;String, ClassTest&gt; c22 = i -&gt; <span class="keyword">new</span> ClassTest(i);</span><br><span class="line">ClassTest s22 = c22.apply(<span class="string">"100"</span>);</span><br></pre></td></tr></table></figure>
+<h3 id="5-CompletableFuture"><a href="#5-CompletableFuture" class="headerlink" title="5. CompletableFuture"></a>5. CompletableFuture</h3><p>参考</p>
+<ul>
+<li><a href="https://mahmoudanouti.wordpress.com/2018/01/26/20-examples-of-using-javas-completablefuture/" target="_blank" rel="noopener">20 Examples of Using Java’s CompletableFuture</a></li>
+<li><a href="http://www.importnew.com/28319.html" target="_blank" rel="noopener">20 个使用 Java CompletableFuture的例子(中文翻译)</a></li>
+</ul>
+<h3 id="6-Stream-流操作"><a href="#6-Stream-流操作" class="headerlink" title="6. Stream 流操作"></a>6. Stream 流操作</h3><p>Stream可以分成串行流和并行流，并行流是基于<code>Java7</code>中提供的<code>ForkJoinPool</code>来进行任务的调度，达到并行的处理的目的。 </p>
+<p>集合是我们平时在进行Java编程时非常常用的<code>API</code>，使用<code>Stream</code>可以帮助更好的来操作集合。</p>
+<p>Stream提供了非常丰富的操作，包括筛选、切片、映射、查找、匹配、归约等等， 这些操作又可以分为中间操作和终端操作，中间操作会返回一个流，因此我们可以使用多个中间操作来作链式的调用，当使用了终端操作之后，那么这个流就被认为是被消费了， 每个流只能有一个终端操作。</p>
+<p>并行流与串行流的区别就在于将<code>stream</code>改成<code>parallelStream</code>，并行流会将流的操作拆分，放到线程池中去执行，但是并不是说使用并行流的性能一定好于串行的流。可能大多数时候使用串行流会有更好的性能，这是因为将任务提交到线程池，执行完之后再合并，这些本身都是有不小的开销的。</p>
+<p>Stream流操作的<code>API</code>：</p>
+<table>
+<thead>
+<tr>
+<th>操作</th>
+<th>类型</th>
+<th>返回类型</th>
+<th>使用的类型/函数式接口</th>
+<th>函数描述符</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>filter</td>
+<td>中间</td>
+<td><code>Stream&lt;T&gt;</code></td>
+<td><code>Predicate&lt;T&gt;</code></td>
+<td><code>T -&gt; boolean</code></td>
+</tr>
+<tr>
+<td>distinct</td>
+<td>中间</td>
+<td><code>Stream&lt;T&gt;</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>skip</td>
+<td>中间</td>
+<td><code>Stream&lt;T&gt;</code></td>
+<td><code>long</code></td>
+<td></td>
+</tr>
+<tr>
+<td>limit</td>
+<td>中间</td>
+<td><code>Stream&lt;T&gt;</code></td>
+<td><code>long</code></td>
+<td></td>
+</tr>
+<tr>
+<td>map</td>
+<td>中间</td>
+<td><code>Stream&lt;R&gt;</code></td>
+<td><code>Function&lt;T,R&gt;</code></td>
+<td><code>T -&gt; R</code></td>
+</tr>
+<tr>
+<td>flatMap</td>
+<td>中间</td>
+<td><code>Stream&lt;R&gt;</code></td>
+<td><code>Function&lt;T, Stream&lt;R&gt;&gt;</code></td>
+<td><code>T -&gt; Stream&lt;R&gt;</code></td>
+</tr>
+<tr>
+<td>sorted</td>
+<td>中间</td>
+<td><code>Stream&lt;R&gt;</code></td>
+<td><code>Comparator&lt;T&gt;</code></td>
+<td><code>(T,T) -&gt; int</code></td>
+</tr>
+<tr>
+<td>anyMatch</td>
+<td>终端</td>
+<td><code>boolean</code></td>
+<td><code>Predicate&lt;T&gt;</code></td>
+<td><code>T -&gt; boolean</code></td>
+</tr>
+<tr>
+<td>noneMatch</td>
+<td>终端</td>
+<td><code>boolean</code></td>
+<td><code>Predicate&lt;T&gt;</code></td>
+<td><code>T -&gt; boolean</code></td>
+</tr>
+<tr>
+<td>allMatch</td>
+<td>终端</td>
+<td><code>boolean</code></td>
+<td><code>Predicate&lt;T&gt;</code></td>
+<td><code>T -&gt; boolean</code></td>
+</tr>
+<tr>
+<td>findAny</td>
+<td>终端</td>
+<td><code>Optional&lt;T&gt;</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>findFirst</td>
+<td>终端</td>
+<td><code>Optional&lt;T&gt;</code></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>forEach</td>
+<td>终端</td>
+<td><code>void</code></td>
+<td><code>Consumer&lt;T&gt;</code></td>
+<td><code>T -&gt; void</code></td>
+</tr>
+<tr>
+<td>collect</td>
+<td>终端</td>
+<td><code>R</code></td>
+<td><code>Collector&lt;T,A,R&gt;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>reduce</td>
+<td>终端</td>
+<td><code>Optional&lt;T&gt;</code></td>
+<td><code>BinaryOperator&lt;T&gt;</code></td>
+<td><code>(T,T) -&gt; T</code></td>
+</tr>
+<tr>
+<td>count</td>
+<td>终端</td>
+<td><code>long</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>数据流的链式调用是<strong>垂直执行</strong>的。原始的流方法会在数据流的所有元素上，一个一个水平地执行完所有流操作，<strong>每个元素</strong>在调用链上垂直移动。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Stream.of(<span class="string">"d1"</span>, <span class="string">"d2"</span>, <span class="string">"d3"</span>)</span><br><span class="line">.filter( s -&gt; &#123;</span><br><span class="line">	System.out.println(<span class="string">"filter with console : "</span> + s);</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;)</span><br><span class="line">.forEach( s -&gt; System.out.println(<span class="string">"foreach: "</span> + s));</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">// 输出：</span><br><span class="line">filter with console : d1</span><br><span class="line">foreach: d1</span><br><span class="line">filter with console : d2</span><br><span class="line">foreach: d2</span><br><span class="line">filter with console : d3</span><br><span class="line">foreach: d3</span><br></pre></td></tr></table></figure>
+<ul>
+<li>衔接操作的延迟性：衔接操作只有遇到终止操作时才会被执行（<strong>重点</strong>）。</li>
+</ul>
+<h3 id="7-新的时间和日期API"><a href="#7-新的时间和日期API" class="headerlink" title="7. 新的时间和日期API"></a>7. 新的时间和日期API</h3><p>新的时间和日期<code>API</code>都是不可变的，并且是线程安全的，之前使用的比如<code>SimpleDateFormat</code>不是线程安全的， 现在可以使用<code>DateTimeFormatter</code>来代替，<code>DateTimeFormatter</code>是线程安全的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> * Java8中加入了LocalDateTime, LocalDate, LocalTime, Duration, Period, Instant, DateTimeFormatter等等API</span></span><br><span class="line"><span class="comment"> * */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TimeApi</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		System.out.println(<span class="string">"\n ==============创建时间==============="</span>);</span><br><span class="line">		LocalDate date = LocalDate.of(<span class="number">2019</span>, <span class="number">3</span>, <span class="number">3</span>);</span><br><span class="line">		System.out.println(date.getYear());</span><br><span class="line">		System.out.println(date.getMonth());</span><br><span class="line">		System.out.println(date.getMonthValue());</span><br><span class="line">		</span><br><span class="line">		System.out.println(<span class="string">"\n ==============时间的解析和格式化==============="</span>);</span><br><span class="line">		LocalDate date2 = LocalDate.parse(<span class="string">"2019-03-03"</span>);</span><br><span class="line">		LocalTime time = LocalTime.parse(<span class="string">"22:50:30"</span>);</span><br><span class="line">		System.out.println(date2.getYear());</span><br><span class="line">		System.out.println(time.getHour());</span><br><span class="line">		</span><br><span class="line">		System.out.println(<span class="string">"\n =================合并日期和时间================"</span>);</span><br><span class="line">		LocalDateTime localDateTime = LocalDateTime.of(date2, time);</span><br><span class="line">		System.out.println(localDateTime.toString());</span><br><span class="line">		</span><br><span class="line">		System.out.println(<span class="string">"\n =================操作日期==================="</span>);</span><br><span class="line">		LocalDate date3 = LocalDate.of(<span class="number">2019</span>, <span class="number">3</span>, <span class="number">3</span>);</span><br><span class="line">		LocalDate date4 = date3.plusDays(<span class="number">10</span>);</span><br><span class="line">		System.out.println(date4.getDayOfWeek());</span><br><span class="line">		System.out.println(date4.getDayOfMonth()); <span class="comment">// 当月的13号</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="重复注解"><a href="#重复注解" class="headerlink" title=". 重复注解"></a>. 重复注解</h3><p>在<code>Java 5</code>中使用注解有一个限制，即相同的注解在同一位置只能声明一次。<code>Java 8</code>引入重复注解，这样相同的注解在同一地方也可以声明多次。重复注解机制本身需要用<code>@Repeatable</code>注解。<code>Java 8</code>在编译器层做了优化，相同注解会以集合的方式保存，因此底层的原理并没有变化。</p>
+<h3 id="扩展注解的支持"><a href="#扩展注解的支持" class="headerlink" title=". 扩展注解的支持"></a>. <strong>扩展注解的支持</strong></h3><p><code>Java 8</code>扩展了注解的上下文，几乎可以为任何东西添加注解，包括局部变量、泛型类、父类与接口的实现，连方法的异常也能添加注解。</p>
+<hr>
+<p>后期会更新一些Java新特性的应用~</p>
+<p>Updated at 2019-03-03 In Guangzhou </p>
+
       
     </div>
     
@@ -360,6 +625,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/03/Java泛型详解/" rel="prev" title="Java泛型详解">
+                Java泛型详解 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -411,8 +680,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -429,7 +707,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -481,6 +759,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-lambda表达式"><span class="nav-number">1.</span> <span class="nav-text">1. lambda表达式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-接口的默认方法与静态方法"><span class="nav-number">2.</span> <span class="nav-text">2. 接口的默认方法与静态方法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#默认方法及其冲突的解决"><span class="nav-number">2.1.</span> <span class="nav-text">默认方法及其冲突的解决</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-Optional类"><span class="nav-number">3.</span> <span class="nav-text">3. Optional类</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-方法引用"><span class="nav-number">4.</span> <span class="nav-text">4. 方法引用</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#类方法引用"><span class="nav-number">4.1.</span> <span class="nav-text">类方法引用</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#构造函数引用"><span class="nav-number">4.2.</span> <span class="nav-text">构造函数引用</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-CompletableFuture"><span class="nav-number">5.</span> <span class="nav-text">5. CompletableFuture</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-Stream-流操作"><span class="nav-number">6.</span> <span class="nav-text">6. Stream 流操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#7-新的时间和日期API"><span class="nav-number">7.</span> <span class="nav-text">7. 新的时间和日期API</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#重复注解"><span class="nav-number">8.</span> <span class="nav-text">. 重复注解</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#扩展注解的支持"><span class="nav-number">9.</span> <span class="nav-text">. 扩展注解的支持</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

@@ -95,7 +95,7 @@
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classloader.png">
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/cinit.png">
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classload.png">
-<meta property="og:updated_time" content="2019-03-02T16:16:57.171Z">
+<meta property="og:updated_time" content="2019-03-08T14:34:59.837Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Java虚拟机(上)">
 <meta name="twitter:description" content="本文仅作为笔者学习《深入理解Java虚拟机》一书的笔记，本文中结合书中讲解和实验，附上自己的理解。 开门见山，先来一张java虚拟机的全家福。  自动内存管理机制Java内存区域与内存溢出异常1. Java运行时数据区程序计数器：是当前线程所执行的字节码的行号指示器。每个线程独有拥有一个程序计数器，为了在每次线程上下文切换后能恢复到线程执行的正确位置。如果线程正在执行的是Native方法，则计数器">
@@ -487,7 +487,7 @@
 <h5 id="准备"><a href="#准备" class="headerlink" title="准备"></a>准备</h5><p>准备阶段是正式为<strong>类级变量</strong>分配内存并设置类变量初始值的阶段，这些变量所使用的内存都将在方法区中进行分配。注意这里初始化的是类级变量，即被<code>static</code>修饰的那些变量，所以这些静态变量是在方法区中进行内存分配的，而<strong>实例级变量</strong>则是随着对象实例化的时候一起在Java堆中进行内存分配。其次，这里初始化不是“构造函数”那样的初始化，而只是将这些类级变量初始化对应的“零值”。对于Java程序意义上的初始化，即构造函数，要等到“初始化阶段”才会发生。</p>
 <h5 id="解析"><a href="#解析" class="headerlink" title="解析"></a>解析</h5><p>解析阶段是虚拟机将常量池中的符号引用替换为直接引用的过程。符号引用只是椅子符号用来描述所引用的目的，与内存布局无关；而直接引用则是和虚拟机内存布局相关的，直接引用可以是直接指向目标的指针。有了直接引用，意味着目的已经在内存中了。</p>
 <h5 id="初始化"><a href="#初始化" class="headerlink" title="初始化"></a>初始化</h5><p>类的初始化是类加载的最后一步，到了初始化结点，就开始执行用户代码（或者说是字节码）。在准备阶段，类级变量已经被赋值过一次（赋零值），在初始化阶段，则是执行用户代码中的类构造器<code>&lt;clinit&gt;</code>。</p>
-<p>注意，类构造器与构造函数不是一回事。<code>&lt;clinit&gt;</code>是由编译器自动收集类中的所有类变量的赋值动作和静态语句块<code>static{}</code>中的语句合并产生的。</p>
+<p>注意，类构造器与构造函数不是一回事。<code>&lt;clinit&gt;</code>是由编译器自动收集类中的所有<strong>类变量</strong>的赋值动作和<strong>静态</strong>语句块<code>static{}</code>中的语句合并产生的。</p>
 <p><img src="/2019/02/22/深入理解Java虚拟机/cinit.png" alt=""></p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">TestClass</span> <span class="keyword">implements</span> <span class="title">Serializable</span>, <span class="title">Cloneable</span></span>&#123;</span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span> s;</span><br><span class="line">	<span class="keyword">static</span> &#123;</span><br><span class="line">		s = <span class="number">12</span>;</span><br><span class="line">	&#125;</span><br><span class="line">    </span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> field1;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getField1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">return</span> field1;</span><br><span class="line">	&#125;	</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p><code>&lt;clinit&gt;</code>与类的构造函数不一样，它不需要显式地调用父类的构造器，这些交给虚拟机来保证执行。因此，虚拟机中第一个被执行的<code>&lt;clinit&gt;</code>方法一定是<code>Object</code>的构造器。虚拟机还会保证一个类的<code>&lt;clinit&gt;</code>方法在多线程环境中能被正确地加锁、同步，当有一个线程执行一个类的<code>&lt;clinit&gt;</code>方法时，其他线程就得阻塞，而当<code>&lt;clinit&gt;</code>被执行完之后，其他阻塞线程不会再去执行它。所以，<strong>在同一个类加载器下，一个类型只会被初始化一次</strong>。</p>
@@ -649,7 +649,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">22</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
