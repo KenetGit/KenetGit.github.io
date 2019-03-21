@@ -95,7 +95,7 @@
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classloader.png">
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/cinit.png">
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classload.png">
-<meta property="og:updated_time" content="2019-03-08T14:34:59.837Z">
+<meta property="og:updated_time" content="2019-03-21T16:11:18.751Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Java虚拟机(上)">
 <meta name="twitter:description" content="本文仅作为笔者学习《深入理解Java虚拟机》一书的笔记，本文中结合书中讲解和实验，附上自己的理解。 开门见山，先来一张java虚拟机的全家福。  自动内存管理机制Java内存区域与内存溢出异常1. Java运行时数据区程序计数器：是当前线程所执行的字节码的行号指示器。每个线程独有拥有一个程序计数器，为了在每次线程上下文切换后能恢复到线程执行的正确位置。如果线程正在执行的是Native方法，则计数器">
@@ -391,7 +391,9 @@
 </ul>
 <h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p><img src="/2019/02/22/深入理解Java虚拟机/GCs.png" alt=""></p>
 <p>注：图中如果两个收集器之间存在连线， 表示可以搭配使用。</p>
-<p>（待补充）</p>
+<blockquote>
+<p>参考<a href="http://www.importnew.com/30237.html#comment-753471" target="_blank" rel="noopener">JVM之ParNew和CMS日志分析</a></p>
+</blockquote>
 <h3 id="对象内存分配和回收策略"><a href="#对象内存分配和回收策略" class="headerlink" title="对象内存分配和回收策略"></a>对象内存分配和回收策略</h3><hr>
 <p>待补充</p>
 <hr>

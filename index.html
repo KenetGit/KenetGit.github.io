@@ -843,8 +843,35 @@
       
         
           
-          
-          
+          事务的隔离级别
+
+
+隔离级别
+脏读
+不可重复读
+幻读（虚读）
+备注
+
+
+
+
+read uncommitted (读未提交)
+maybe
+maybe
+maybe
+最低级别
+
+
+read committed （读已提交）
+No
+Maybe
+Maybe
+
+
+
+repeatable read (可重复读)
+
+          ...
           <!--noindex-->
           <div class="post-button text-center">
             <a class="btn" href="/2019/03/03/database-02/#more" rel="contents">
@@ -973,7 +1000,9 @@
       
         
           
-          
+          以MySQL为例，理解InnoDB和MyISAM的索引原理，虽然二者都是基于B+树，但前者是聚簇索引，而后者是非聚簇索引。非聚簇索引是指索引文件和数据文件是分离的，而聚簇索引是指数据文件本身也是索引文件，换句话说，数据文件是按索引来组织的。
+所以，InnoDB索引引擎要比MyISAM效率高。
+
           
           <!--noindex-->
           <div class="post-button text-center">

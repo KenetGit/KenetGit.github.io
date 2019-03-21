@@ -79,14 +79,17 @@
 
 
 
+<meta name="description" content="以MySQL为例，理解InnoDB和MyISAM的索引原理，虽然二者都是基于B+树，但前者是聚簇索引，而后者是非聚簇索引。非聚簇索引是指索引文件和数据文件是分离的，而聚簇索引是指数据文件本身也是索引文件，换句话说，数据文件是按索引来组织的。 所以，InnoDB索引引擎要比MyISAM效率高。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据库原理：存储与索引">
 <meta property="og:url" content="http://kenetgit.top/2019/03/03/database-01/index.html">
 <meta property="og:site_name" content="KenetGit&#39;s blog">
+<meta property="og:description" content="以MySQL为例，理解InnoDB和MyISAM的索引原理，虽然二者都是基于B+树，但前者是聚簇索引，而后者是非聚簇索引。非聚簇索引是指索引文件和数据文件是分离的，而聚簇索引是指数据文件本身也是索引文件，换句话说，数据文件是按索引来组织的。 所以，InnoDB索引引擎要比MyISAM效率高。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-06T14:56:36.284Z">
+<meta property="og:updated_time" content="2019-03-08T15:51:10.700Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库原理：存储与索引">
+<meta name="twitter:description" content="以MySQL为例，理解InnoDB和MyISAM的索引原理，虽然二者都是基于B+树，但前者是聚簇索引，而后者是非聚簇索引。非聚簇索引是指索引文件和数据文件是分离的，而聚簇索引是指数据文件本身也是索引文件，换句话说，数据文件是按索引来组织的。 所以，InnoDB索引引擎要比MyISAM效率高。">
 
 
 
@@ -317,7 +320,9 @@
       
 
       
-        
+        <p>以MySQL为例，理解InnoDB和MyISAM的索引原理，虽然二者都是基于B+树，但前者是聚簇索引，而后者是非聚簇索引。非聚簇索引是指索引文件和数据文件是分离的，而聚簇索引是指数据文件本身也是索引文件，换句话说，数据文件是按索引来组织的。</p>
+<p>所以，InnoDB索引引擎要比MyISAM效率高。</p>
+
       
     </div>
     
