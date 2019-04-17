@@ -79,13 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="KenetGit&#39;s blog">
-<meta property="og:url" content="http://kenetgit.top/archives/2019/02/index.html">
+<meta name="description" content="TCP可靠传输TCP使用了检验、序号、确认和重传等机制来达到可靠传输的目的。  序号：TCP连接中传输的数据流中的每一个字节都编上一个序号。 确认：  TCP首部的确认号是期望收到对方的下一个报文段的数据的第一个字节的序号。发送方会缓存未收到确认的报文段，以便在需要的时候重传。 TCP默认使用累计确认，即TCP只确认按序数据流中的每一个字节直到第一个丢失的字节为止。   重传：  超时，TCP每发">
+<meta property="og:type" content="article">
+<meta property="og:title" content="聊聊传输层协议TCP和UDP">
+<meta property="og:url" content="http://kenetgit.top/2019/03/22/聊聊传输层协议TCP和UDP/index.html">
 <meta property="og:site_name" content="KenetGit&#39;s blog">
+<meta property="og:description" content="TCP可靠传输TCP使用了检验、序号、确认和重传等机制来达到可靠传输的目的。  序号：TCP连接中传输的数据流中的每一个字节都编上一个序号。 确认：  TCP首部的确认号是期望收到对方的下一个报文段的数据的第一个字节的序号。发送方会缓存未收到确认的报文段，以便在需要的时候重传。 TCP默认使用累计确认，即TCP只确认按序数据流中的每一个字节直到第一个丢失的字节为止。   重传：  超时，TCP每发">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-03-22T16:14:40.255Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="KenetGit&#39;s blog">
+<meta name="twitter:title" content="聊聊传输层协议TCP和UDP">
+<meta name="twitter:description" content="TCP可靠传输TCP使用了检验、序号、确认和重传等机制来达到可靠传输的目的。  序号：TCP连接中传输的数据流中的每一个字节都编上一个序号。 确认：  TCP首部的确认号是期望收到对方的下一个报文段的数据的第一个字节的序号。发送方会缓存未收到确认的报文段，以便在需要的时候重传。 TCP默认使用累计确认，即TCP只确认按序数据流中的每一个字节直到第一个丢失的字节为止。   重传：  超时，TCP每发">
 
 
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://kenetgit.top/archives/2019/02/">
+  <link rel="canonical" href="http://kenetgit.top/2019/03/22/聊聊传输层协议TCP和UDP/">
 
 
 
 
 
-  <title>归档 | KenetGit's blog</title>
+  <title>聊聊传输层协议TCP和UDP | KenetGit's blog</title>
   
 
 
@@ -140,7 +144,7 @@
     
   
 
-  <div class="container sidebar-position-right page-archive">
+  <div class="container sidebar-position-right page-post-detail">
     <div class="headband"></div>
     <!-- github角落 -->
     <a href="https://github.com/KenetGit" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewbox="0 0 250 250" style="fill:#fff; color:#151513; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"/><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"/><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"/></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
@@ -235,390 +239,190 @@
           <div id="content" class="content">
             
 
+  <div id="posts" class="posts-expand">
+    
+
+  
+
   
   
   
-  <div class="post-block archive">
-    <div id="posts" class="posts-collapse">
-      <span class="archive-move-on"></span>
 
-      <span class="archive-page-counter">
-        
-        
-         
-        
-        OK! 目前共计 31 篇日志。 继续努力。
-      </span>
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://kenetgit.top/2019/03/22/聊聊传输层协议TCP和UDP/">
 
-      
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Kenet">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/kenetgit-avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="KenetGit's blog">
+    </span>
+
+    
+      <header class="post-header">
 
         
         
+          <h1 class="post-title" itemprop="name headline">聊聊传输层协议TCP和UDP</h1>
         
 
-        
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-22T23:24:55+08:00">
+                2019-03-22
+              </time>
+            
+
+            
+
+            
+          </span>
+
           
-          <div class="collection-title">
-            <h1 class="archive-year" id="archive-year-2019">2019</h1>
-          </div>
-        
-        
 
-        
+          
+            
+          
 
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
+          
+          
 
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/28/深入理解Java虚拟机-下/" itemprop="url">
-              
-                <span itemprop="name">深入理解Java虚拟机(下)</span>
-              
-            </a>
-        
-      </h2>
+          
 
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-28T14:56:56+08:00" content="2019-02-28">
-          02-28
-        </time>
-      </div>
+          
 
-    </header>
-  </article>
+          
 
+        </div>
+      </header>
+    
 
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/27/JVM实战分析/" itemprop="url">
-              
-                <span itemprop="name">JVM实战分析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-27T11:52:57+08:00" content="2019-02-27">
-          02-27
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
       
 
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/25/深入学习Java集合类/" itemprop="url">
-              
-                <span itemprop="name">初见Java集合类</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-25T21:08:56+08:00" content="2019-02-25">
-          02-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
+      
+        <h3 id="TCP可靠传输"><a href="#TCP可靠传输" class="headerlink" title="TCP可靠传输"></a>TCP可靠传输</h3><p>TCP使用了检验、序号、确认和重传等机制来达到可靠传输的目的。</p>
+<ul>
+<li>序号：TCP连接中传输的数据流中的每一个字节都编上一个序号。</li>
+<li><p>确认：</p>
+<ul>
+<li>TCP首部的确认号是期望收到对方的下一个报文段的数据的第一个字节的序号。发送方会缓存未收到确认的报文段，以便在需要的时候重传。</li>
+<li>TCP默认使用累计确认，即TCP只确认按序数据流中的每一个字节直到第一个丢失的字节为止。</li>
+</ul>
+</li>
+<li><p>重传：</p>
+<ul>
+<li>超时，TCP每发送一个报文，就对这个报文设置一次计时器，如果在计时期间发送方没有收到确认，就会重传这一报文段。重传时间一般是一个往返时间，即RTT。</li>
+<li>冗余ACK，冗余ACK就是再次确认某个报文段的ACK，而发送方原先就收到过该报文的确认。如果接收方遇到失序报文段时，就会发送冗余ACK来重复确认最后一次按序的报文段，告诉发送方，接收方目前只能累计确认到哪个报文，从哪个报文开始失序，要去发送被期望的那个报文段。发送如果连续收到3个冗余ACK，就会启动重传。（这也称为快速重传）</li>
+</ul>
+</li>
+</ul>
+<h3 id="流量控制"><a href="#流量控制" class="headerlink" title="流量控制"></a>流量控制</h3><ul>
+<li><p>停等协议</p>
+</li>
+<li><p>滑动窗口协议：</p>
+<ul>
+<li>发送窗口：发送窗口用来对发送方进行流量控制，而发送窗口的大小代表在还没有收到对方确认信息的情况下最多还能发送多少数据。</li>
+<li><p>接收窗口：接收窗口用来控制可以接收哪些数据而不可以接收哪些数据，只有当收到的（报文段）序号落入接收窗口时才允许接收该数据报。</p>
+</li>
+<li><p>只有在接收窗口向前滑动时，发送窗口才有可能向前滑动。</p>
+</li>
+</ul>
+</li>
+<li><p>从滑动窗口上区分，停等协议、后退N步协议和选择重传协议。</p>
+<ul>
+<li>停等协议：发送窗口=接收窗口=1</li>
+<li>后退N步：发送窗口&gt;1， 接收窗口=1</li>
+<li>选择重传：发送窗口&gt;1，接收窗口&gt;1</li>
+</ul>
+</li>
+</ul>
 
       
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/25/Java面试准备-数据库篇/" itemprop="url">
-              
-                <span itemprop="name">MySQL数据库(基础篇)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-25T11:03:31+08:00" content="2019-02-25">
-          02-25
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/23/Java面试准备-高级篇/" itemprop="url">
-              
-                <span itemprop="name">Java高级篇</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-23T09:57:44+08:00" content="2019-02-23">
-          02-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/22/深入理解Java虚拟机/" itemprop="url">
-              
-                <span itemprop="name">深入理解Java虚拟机(上)</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-22T23:44:16+08:00" content="2019-02-22">
-          02-22
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/20/Java面试准备-基础篇/" itemprop="url">
-              
-                <span itemprop="name">Java基础篇</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-20T19:38:44+08:00" content="2019-02-20">
-          02-20
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/18/学习RESTful-API开发/" itemprop="url">
-              
-                <span itemprop="name">学习RESTful-API开发</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-18T01:00:24+08:00" content="2019-02-18">
-          02-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/18/http协议/" itemprop="url">
-              
-                <span itemprop="name">http协议</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-18T00:27:15+08:00" content="2019-02-18">
-          02-18
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
-        
-        
-        
-
-        
-        
-
-        
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2019/02/15/Understand-the-JVM/" itemprop="url">
-              
-                <span itemprop="name">Understand the JVM</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated" datetime="2019-02-15T11:18:02+08:00" content="2019-02-15">
-          02-15
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-      
-
     </div>
+    
+    
+    
+
+  <div>
+    
+      <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束,感谢阅读-------------</div>
+    
+</div>
+    
+  </div>
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/03/08/Java中的锁/" rel="next" title="Java中的锁">
+                <i class="fa fa-chevron-left"></i> Java中的锁
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/04/17/学习开源博客系统tumo-一-数据库设计/" rel="prev" title="学习开源博客系统tumo(一):数据库设计">
+                学习开源博客系统tumo(一):数据库设计 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
   </div>
   
   
   
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/2019/02/page/2/">2</a><a class="extend next" rel="next" href="/archives/2019/02/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
+  </article>
 
 
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -626,6 +430,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -646,8 +454,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
             
@@ -716,6 +533,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#TCP可靠传输"><span class="nav-number">1.</span> <span class="nav-text">TCP可靠传输</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#流量控制"><span class="nav-number">2.</span> <span class="nav-text">流量控制</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -846,6 +679,10 @@
   
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 

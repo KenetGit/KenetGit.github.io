@@ -95,7 +95,7 @@
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classloader.png">
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/cinit.png">
 <meta property="og:image" content="http://kenetgit.top/2019/02/22/深入理解Java虚拟机/classload.png">
-<meta property="og:updated_time" content="2019-03-21T16:11:18.751Z">
+<meta property="og:updated_time" content="2019-03-22T14:46:07.672Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="深入理解Java虚拟机(上)">
 <meta name="twitter:description" content="本文仅作为笔者学习《深入理解Java虚拟机》一书的笔记，本文中结合书中讲解和实验，附上自己的理解。 开门见山，先来一张java虚拟机的全家福。  自动内存管理机制Java内存区域与内存溢出异常1. Java运行时数据区程序计数器：是当前线程所执行的字节码的行号指示器。每个线程独有拥有一个程序计数器，为了在每次线程上下文切换后能恢复到线程执行的正确位置。如果线程正在执行的是Native方法，则计数器">
@@ -391,6 +391,23 @@
 </ul>
 <h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p><img src="/2019/02/22/深入理解Java虚拟机/GCs.png" alt=""></p>
 <p>注：图中如果两个收集器之间存在连线， 表示可以搭配使用。</p>
+<p>新生代收集器：Serial收集器、ParNew收集器 和 Parallel Scavenge收集器</p>
+<p>老年代收集器：CMS收集器、Serial Old (MSC)收集器 和 Parallel Old收集器。</p>
+<ul>
+<li><p>Serial 收集器</p>
+<p>单线程的收集器。这里的“单线程“不仅意味着它只会使用一个CPU或一个收集工作的线程，更在于Serial收集器在进行回收工作时，其它工作线程必须暂停，直到回收工作结束。</p>
+<p>| Serial young                             | Serial Old                                    |<br>| —————————————- | ——————————————— |<br>| 新生代采取<strong>复制算法</strong>，暂停所有用户线程 | 老年代采取<strong>标记-整理算法</strong>，暂停所有用户线程 |</p>
+</li>
+<li><p>ParNew收集器</p>
+<p>ParNew是Serial收集器的<strong>多线程版本</strong>，除了使用多线程进行收集工作，其他基本和Serial是一样的。但是ParNew有一个特别的地位：除了Serial收集器，目前只有ParNew能和CMS收集器搭配工作。</p>
+<p>| Serial young                                               | Serial Old                                    |<br>| ———————————————————- | ——————————————— |<br>| 多线程工作，新生代采取<strong>复制算法</strong>，<br>暂停所有用户线程 | 老年代采取<strong>标记-整理算法</strong>，暂停所有用户线程 |</p>
+</li>
+<li><p>Parallel Scavenge收集器</p>
+<p>Parallel Scavenge收集器关注的目标是吞吐量，而其他收集器的目标是尽可能减少垃圾收集的停顿时间。停顿时间越短，越适合人机交互，这种情况下响应速度较快，用户体验更好。而高的吞吐量则能高效地利用CPU，使得程序能够尽快执行完毕，例如在后台运算的任务就不需要太多交互而需要尽快计算完毕。</p>
+<p>Parallel Scavenge收集器提供两个参数用于精确控制吞吐量：</p>
+<p>| 参数                | 作用                     |<br>| ——————- | ———————— |<br>| -XX:MaxGCPauseMills | 控制最大垃圾收集停顿时间 |<br>| -XX:GCTimeRatio     | 设置吞吐量大小           |</p>
+</li>
+</ul>
 <blockquote>
 <p>参考<a href="http://www.importnew.com/30237.html#comment-753471" target="_blank" rel="noopener">JVM之ParNew和CMS日志分析</a></p>
 </blockquote>
@@ -651,7 +668,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

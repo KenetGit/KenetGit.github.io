@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="KenetGit&#39;s blog">
 <meta property="og:description" content="事务的隔离级别   隔离级别 脏读 不可重复读 幻读（虚读） 备注     read uncommitted (读未提交) maybe maybe maybe 最低级别   read committed （读已提交） No Maybe Maybe    repeatable read (可重复读) No No Maybe    serializable（可序列化） No No No 最高级别">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-08T15:48:29.754Z">
+<meta property="og:updated_time" content="2019-03-22T16:15:51.770Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据库原理：事务管理">
 <meta name="twitter:description" content="事务的隔离级别   隔离级别 脏读 不可重复读 幻读（虚读） 备注     read uncommitted (读未提交) maybe maybe maybe 最低级别   read committed （读已提交） No Maybe Maybe    repeatable read (可重复读) No No Maybe    serializable（可序列化） No No No 最高级别">
@@ -367,8 +367,7 @@
 <p>脏读：是指在一个事务处理过程里读取了另一个未提交的事务中的数据</p>
 </blockquote>
 <ul>
-<li><p>serializable（可串行化）：可避免脏读、不可重复读和幻读的发生。</p>
-<p>实际就是通过对整个表加锁</p>
+<li><p>serializable（可串行化）：可避免脏读、不可重复读和幻读的发生。实际就是通过对整个表加锁</p>
 </li>
 <li><p>repeatable read (可重复读)：可避免脏读、不可重复读的发生。（MySQL默认）</p>
 </li>
@@ -529,7 +528,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">31</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
