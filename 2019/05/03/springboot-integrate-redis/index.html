@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="springboot,redis,">
 
 
 
@@ -79,19 +79,23 @@
 
 
 
-<meta name="description" content="并发类Java7 ConcurrentHashMapConcurrentHashMap 和 HashMap 思路是差不多的，但是因为它支持并发操作，所以要复杂一些。 整个 ConcurrentHashMap 由一个个 Segment 组成，Segment 代表”部分“或”一段“的意思，所以很多地方都会将其描述为分段锁。注意，行文中，我很多地方用了“槽”来代表一个 segment。 简单理解就是，C">
+<meta name="description" content="Redis是基于key-value存储的免费开源的高性能数据库。Redis的操作都是原子的，即要么成功要么失败。单个操作是原子的，多个操作也可以是原子的，即Redis也支持事务特性。 本文将介绍如何在Springboot中整合使用Redis，感谢Tycoding的文章，本文在其指导下完成实验。 为使用Redis，首先应该在安装Redis，同时推荐安装RedisDesktopManager，一款用于">
+<meta name="keywords" content="springboot,redis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="谈谈Java常用的并发类">
-<meta property="og:url" content="http://kenetgit.top/2019/03/08/谈谈Java常用的并发类/index.html">
+<meta property="og:title" content="(四)springboot整合redis开发入门">
+<meta property="og:url" content="http://kenetgit.top/2019/05/03/springboot-integrate-redis/index.html">
 <meta property="og:site_name" content="KenetGit&#39;s blog">
-<meta property="og:description" content="并发类Java7 ConcurrentHashMapConcurrentHashMap 和 HashMap 思路是差不多的，但是因为它支持并发操作，所以要复杂一些。 整个 ConcurrentHashMap 由一个个 Segment 组成，Segment 代表”部分“或”一段“的意思，所以很多地方都会将其描述为分段锁。注意，行文中，我很多地方用了“槽”来代表一个 segment。 简单理解就是，C">
+<meta property="og:description" content="Redis是基于key-value存储的免费开源的高性能数据库。Redis的操作都是原子的，即要么成功要么失败。单个操作是原子的，多个操作也可以是原子的，即Redis也支持事务特性。 本文将介绍如何在Springboot中整合使用Redis，感谢Tycoding的文章，本文在其指导下完成实验。 为使用Redis，首先应该在安装Redis，同时推荐安装RedisDesktopManager，一款用于">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://kenetgit.top/2019/03/08/谈谈Java常用的并发类/concurrent_hashmap.png">
-<meta property="og:updated_time" content="2019-03-08T15:01:11.349Z">
+<meta property="og:image" content="http://kenetgit.top/2019/05/03/springboot-integrate-redis/redis3.png">
+<meta property="og:image" content="http://kenetgit.top/2019/05/03/springboot-integrate-redis/redis4.png">
+<meta property="og:image" content="http://kenetgit.top/2019/05/03/springboot-integrate-redis/redis.png">
+<meta property="og:image" content="http://kenetgit.top/2019/05/03/springboot-integrate-redis/redis2.png">
+<meta property="og:updated_time" content="2019-05-03T15:19:31.472Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="谈谈Java常用的并发类">
-<meta name="twitter:description" content="并发类Java7 ConcurrentHashMapConcurrentHashMap 和 HashMap 思路是差不多的，但是因为它支持并发操作，所以要复杂一些。 整个 ConcurrentHashMap 由一个个 Segment 组成，Segment 代表”部分“或”一段“的意思，所以很多地方都会将其描述为分段锁。注意，行文中，我很多地方用了“槽”来代表一个 segment。 简单理解就是，C">
-<meta name="twitter:image" content="http://kenetgit.top/2019/03/08/谈谈Java常用的并发类/concurrent_hashmap.png">
+<meta name="twitter:title" content="(四)springboot整合redis开发入门">
+<meta name="twitter:description" content="Redis是基于key-value存储的免费开源的高性能数据库。Redis的操作都是原子的，即要么成功要么失败。单个操作是原子的，多个操作也可以是原子的，即Redis也支持事务特性。 本文将介绍如何在Springboot中整合使用Redis，感谢Tycoding的文章，本文在其指导下完成实验。 为使用Redis，首先应该在安装Redis，同时推荐安装RedisDesktopManager，一款用于">
+<meta name="twitter:image" content="http://kenetgit.top/2019/05/03/springboot-integrate-redis/redis3.png">
 
 
 
@@ -121,13 +125,13 @@
 
 
 
-  <link rel="canonical" href="http://kenetgit.top/2019/03/08/谈谈Java常用的并发类/">
+  <link rel="canonical" href="http://kenetgit.top/2019/05/03/springboot-integrate-redis/">
 
 
 
 
 
-  <title>谈谈Java常用的并发类 | KenetGit's blog</title>
+  <title>(四)springboot整合redis开发入门 | KenetGit's blog</title>
   
 
 
@@ -255,7 +259,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://kenetgit.top/2019/03/08/谈谈Java常用的并发类/">
+    <link itemprop="mainEntityOfPage" href="http://kenetgit.top/2019/05/03/springboot-integrate-redis/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Kenet">
@@ -272,7 +276,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">谈谈Java常用的并发类</h1>
+          <h1 class="post-title" itemprop="name headline">(四)springboot整合redis开发入门</h1>
         
 
         <div class="post-meta">
@@ -284,8 +288,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-08T22:58:07+08:00">
-                2019-03-08
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-03T17:10:31+08:00">
+                2019-05-03
               </time>
             
 
@@ -322,10 +326,27 @@
       
 
       
-        <h2 id="并发类"><a href="#并发类" class="headerlink" title="并发类"></a>并发类</h2><h3 id="Java7-ConcurrentHashMap"><a href="#Java7-ConcurrentHashMap" class="headerlink" title="Java7 ConcurrentHashMap"></a>Java7 ConcurrentHashMap</h3><p>ConcurrentHashMap 和 HashMap 思路是差不多的，但是因为它支持并发操作，所以要复杂一些。</p>
-<p>整个 ConcurrentHashMap 由一个个 Segment 组成，Segment 代表”部分“或”一段“的意思，所以很多地方都会将其描述为分段锁。注意，行文中，我很多地方用了“槽”来代表一个 segment。</p>
-<p>简单理解就是，ConcurrentHashMap 是一个 Segment 数组，Segment 通过继承 <code>ReentrantLock</code> 来进行加锁，所以每次需要加锁的操作锁住的是一个 segment，这样只要保证每个 Segment 是线程安全的，也就实现了全局的线程安全。</p>
-<p><img src="/2019/03/08/谈谈Java常用的并发类/concurrent_hashmap.png" alt=""></p>
+        <p><code>Redis</code>是基于key-value存储的免费开源的高性能数据库。<code>Redis</code>的操作都是原子的，即要么成功要么失败。单个操作是原子的，多个操作也可以是原子的，即<code>Redis</code>也支持事务特性。</p>
+<p>本文将介绍如何在<code>Springboot</code>中整合使用<code>Redis</code>，感谢<a href="https://tycoding.cn/2019/02/26/spring-boot-redis/" target="_blank" rel="noopener">Tycoding</a>的文章，本文在其指导下完成实验。</p>
+<p>为使用Redis，首先应该在安装<code>Redis</code>，同时推荐安装<code>RedisDesktopManager</code>，一款用于可视化操作<code>Redis</code>的桌面客户端。</p>
+<p><img src="/2019/05/03/springboot-integrate-redis/redis3.png" alt=""></p>
+<p>安装完成之后，即可以进行下面的实验。</p>
+<h3 id="导入依赖"><a href="#导入依赖" class="headerlink" title="导入依赖"></a>导入依赖</h3><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--redis--&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework.boot<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-boot-starter-data-redis<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>即添加redis服务器的连接属性，springboot应用启动时将完成对redis服务器的连接。</p>
+<figure class="highlight yml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">spring:</span> </span><br><span class="line"><span class="attr">    redis:</span></span><br><span class="line"><span class="attr">        database:</span> <span class="number">1</span></span><br><span class="line"><span class="attr">        host:</span> <span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span></span><br><span class="line"><span class="attr">        port:</span> <span class="number">6379</span></span><br><span class="line"><span class="attr">        password:</span></span><br></pre></td></tr></table></figure>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><p><code>spring-boot-starter-data-redis</code>包提供了操作<code>Redis</code>的客户端模板类<code>RedisTemplate</code>。使用之可以进行一系列操作，就如使用<code>redis-cli</code>一般。</p>
+<p>使用该模板类时应当指明泛型类型，否则可能出现乱码，如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> RedisTemplate&lt;String, String&gt; redisTemplate;</span><br></pre></td></tr></table></figure>
+<p>进行一个简单的测试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@RunWith</span>(SpringRunner.class)</span><br><span class="line"><span class="meta">@SpringBootTest</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedisTests</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Autowired</span></span><br><span class="line">    <span class="keyword">private</span> RedisTemplate&lt;String, String&gt; redisTemplate;</span><br><span class="line">    </span><br><span class="line">    <span class="meta">@Test</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">testRedisConfiguration</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        redisTemplate.boundValueOps(<span class="string">"test_key"</span>).set(<span class="string">"springboot_redis"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><img src="/2019/05/03/springboot-integrate-redis/redis4.png" alt=""></p>
+<h3 id="高级玩法"><a href="#高级玩法" class="headerlink" title="高级玩法"></a>高级玩法</h3><p>高级一点的玩法是构建对Redis内存占用或者存储key-value数目的动态监控，前端使用<code>Highcharts</code>框架用于呈现动态的曲线图，实现的效果如下。</p>
+<p><img src="/2019/05/03/springboot-integrate-redis/redis.png" alt=""></p>
+<p><code>Highcharts</code>非常容易使用，具体使用可以查看其<a href="https://www.highcharts.com/demo/dynamic-update" target="_blank" rel="noopener">官网</a></p>
+<p>本次实验还实现了一个web端的命令行窗口用于交互操作服务器端的<code>Redis</code>数据库。</p>
+<p><img src="/2019/05/03/springboot-integrate-redis/redis2.png" alt=""></p>
+<p>更多细节可见<code>Tycoding</code>的文章，再次感谢<code>Tycoding</code>。</p>
+<h3 id="致谢"><a href="#致谢" class="headerlink" title="致谢"></a>致谢</h3><p><a href="https://tycoding.cn/2019/02/26/spring-boot-redis/" target="_blank" rel="noopener">@Tycoding</a></p>
 
       
     </div>
@@ -351,6 +372,14 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/springboot/" rel="tag"># springboot</a>
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
 
       
       
@@ -360,8 +389,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/03/database-03/" rel="next" title="数据库设计：模式与范式">
-                <i class="fa fa-chevron-left"></i> 数据库设计：模式与范式
+              <a href="/2019/05/02/Springboot-integrate-Shiro/" rel="next" title="(三)Springboot整合Shiro">
+                <i class="fa fa-chevron-left"></i> (三)Springboot整合Shiro
               </a>
             
           </div>
@@ -369,10 +398,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/03/22/聊聊传输层协议TCP和UDP/" rel="prev" title="聊聊传输层协议TCP和UDP">
-                聊聊传输层协议TCP和UDP <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -513,7 +538,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#并发类"><span class="nav-number">1.</span> <span class="nav-text">并发类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Java7-ConcurrentHashMap"><span class="nav-number">1.1.</span> <span class="nav-text">Java7 ConcurrentHashMap</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#导入依赖"><span class="nav-number">1.</span> <span class="nav-text">导入依赖</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改配置文件"><span class="nav-number">2.</span> <span class="nav-text">修改配置文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#测试"><span class="nav-number">3.</span> <span class="nav-text">测试</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#高级玩法"><span class="nav-number">4.</span> <span class="nav-text">高级玩法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#致谢"><span class="nav-number">5.</span> <span class="nav-text">致谢</span></a></li></ol></div>
             
 
           </div>
